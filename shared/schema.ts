@@ -79,47 +79,170 @@ export type ApplicationHistory = typeof applicationHistory.$inferSelect;
 
 // Validation schemas for application forms
 export const personalInfoSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
+  surname: z.string().min(1, "Surname is required"),
+  middleName: z.string().min(1, "Middle name is required"),
   lastName: z.string().min(1, "Last name is required"),
-  dob: z.string().min(1, "Date of birth is required"),
-  phone: z.string().min(1, "Phone number is required"),
-  address: z.string().min(1, "Address is required"),
-  city: z.string().min(1, "City is required"),
-  zipCode: z.string().min(1, "ZIP code is required"),
+  nationalIdNumber: z.string().min(1, "National ID/Birth Certificate number is required"),
+  huduma: z.string().optional(),
+  dateOfBirth: z.string().min(1, "Date of birth is required"),
+  gender: z.enum(["Male", "Female"], { required_error: "Gender is required" }),
+  hasDisability: z.boolean().default(false),
+  disabilityDetails: z.string().optional(),
+  nhifNumber: z.string().min(1, "NHIF Card number is required"),
+  religion: z.string().optional(),
+  nationality: z.string().min(1, "Nationality is required"),
+  contactAddress: z.object({
+    poBox: z.string().min(1, "P.O. Box is required"),
+    postalCode: z.string().min(1, "Postal code is required"),
+    town: z.string().min(1, "Town is required"),
+  }),
+  phoneNumber: z.string().min(1, "Phone number is required"),
+  email: z.string().email("Please enter a valid email"),
+  maritalStatus: z.enum(["Single", "Married", "Divorced", "Widowed"], { required_error: "Marital status is required" }),
+  spouseDetails: z.object({
+    name: z.string().optional(),
+    occupation: z.string().optional(),
+    phoneNumber: z.string().optional(),
+    childrenCount: z.number().optional(),
+  }).optional(),
+  fatherDetails: z.object({
+    name: z.string().min(1, "Father's name is required"),
+    isAlive: z.boolean().default(true),
+    occupation: z.string().optional(),
+    dateOfBirth: z.string().optional(),
+  }),
+  motherDetails: z.object({
+    name: z.string().min(1, "Mother's name is required"),
+    isAlive: z.boolean().default(true),
+    occupation: z.string().optional(),
+    dateOfBirth: z.string().optional(),
+  }),
+  siblingsCount: z.number().optional(),
+  birthPlace: z.string().min(1, "Place of birth is required"),
+  permanentResidence: z.object({
+    village: z.string().min(1, "Village/Town is required"),
+    nearestTown: z.string().min(1, "Nearest town is required"),
+    location: z.string().min(1, "Location is required"),
+    chiefName: z.string().min(1, "Chief's name is required"),
+    county: z.string().min(1, "County is required"),
+    subCounty: z.string().min(1, "Sub-county is required"),
+    constituency: z.string().min(1, "Constituency is required"),
+    nearestPoliceStation: z.string().min(1, "Nearest police station is required"),
+  }),
+  emergencyContacts: z.array(
+    z.object({
+      name: z.string().min(1, "Name is required"),
+      relationship: z.string().min(1, "Relationship is required"),
+      poBox: z.string().min(1, "P.O. Box is required"),
+      postalCode: z.string().min(1, "Postal code is required"),
+      town: z.string().min(1, "Town is required"),
+      phoneNumber: z.string().min(1, "Phone number is required"),
+      email: z.string().email("Please enter a valid email"),
+    })
+  ).min(2, "At least two emergency contacts are required"),
 });
 
 export const educationInfoSchema = z.object({
-  highSchool: z.object({
-    name: z.string().min(1, "High school name is required"),
-    city: z.string().min(1, "City is required"),
-    state: z.string().min(1, "State is required"),
-    startDate: z.string().min(1, "Start date is required"),
-    endDate: z.string().min(1, "End date is required"),
-    gpa: z.string().min(1, "GPA is required"),
+  secondarySchool: z.object({
+    name: z.string().min(1, "School name is required"),
+    indexNumber: z.string().min(1, "Index number is required"),
+    yearCompleted: z.string().min(1, "Year completed is required"),
+    results: z.string().min(1, "KCSE results are required"),
   }),
-  college: z.object({
-    attended: z.boolean().default(false),
-    name: z.string().optional(),
-    city: z.string().optional(),
-    state: z.string().optional(),
-    startDate: z.string().optional(),
-    endDate: z.string().optional(),
-    gpa: z.string().optional(),
-  }).optional(),
+  primarySchool: z.object({
+    name: z.string().min(1, "School name is required"),
+    indexNumber: z.string().min(1, "Index number is required"),
+    yearCompleted: z.string().min(1, "Year completed is required"),
+    results: z.string().min(1, "KCPE results are required"),
+  }),
+  otherInstitutions: z.string().optional(),
 });
 
 export const programInfoSchema = z.object({
-  type: z.string().min(1, "Program type is required"),
-  major: z.string().min(1, "Major is required"),
-  startTerm: z.string().min(1, "Start term is required"),
+  school: z.string().min(1, "School is required"),
+  programme: z.string().min(1, "Programme is required"),
+  academicYear: z.string().min(1, "Academic year is required"),
   campus: z.string().min(1, "Campus is required"),
-  question: z.string().min(1, "Please answer the question"),
+  yearOfStudy: z.string().min(1, "Year of study is required"),
+  semester: z.string().min(1, "Semester is required"),
+  entryIntake: z.string().min(1, "Entry intake is required"),
+  studyMode: z.enum(["Full Time", "Weekend", "Evening", "Part time"], { required_error: "Mode of study is required" }),
+});
+
+export const medicalInfoSchema = z.object({
+  hospitalAdmission: z.object({
+    wasAdmitted: z.boolean().default(false),
+    details: z.string().optional(),
+  }),
+  medicalConditions: z.object({
+    hasTuberculosis: z.boolean().default(false),
+    hasNervousDisease: z.boolean().default(false),
+    hasHeartDisease: z.boolean().default(false),
+    hasDigestiveDisease: z.boolean().default(false),
+    hasAllergies: z.boolean().default(false),
+    hasSTDs: z.boolean().default(false),
+    hasPolio: z.boolean().default(false),
+    otherConditions: z.string().optional(),
+  }),
+  familyMedicalHistory: z.object({
+    familyTuberculosis: z.boolean().default(false),
+    familyMentalIllness: z.boolean().default(false),
+    familyDiabetes: z.boolean().default(false),
+    familyHeartDisease: z.boolean().default(false),
+  }),
+  immunization: z.object({
+    smallpox: z.object({
+      isImmunized: z.boolean().default(false),
+      immunizationDate: z.string().optional(),
+    }),
+    tetanus: z.object({
+      isImmunized: z.boolean().default(false),
+      immunizationDate: z.string().optional(),
+    }),
+    polio: z.object({
+      isImmunized: z.boolean().default(false),
+      immunizationDate: z.string().optional(),
+    }),
+  }),
+});
+
+export const interestsSchema = z.object({
+  sports: z.string().optional(),
+  clubs: z.string().optional(),
+  additionalInfo: z.string().optional(),
+});
+
+export const accommodationSchema = z.object({
+  residenceType: z.enum(["Resident", "Non-resident"], { required_error: "Residence type is required" }),
+  residentDetails: z.object({
+    hostelName: z.string().optional(),
+    roomNumber: z.string().optional(),
+  }).optional(),
+  nonResidentDetails: z.object({
+    residencePlace: z.string().optional(),
+  }).optional(),
+});
+
+export const documentsSchema = z.object({
+  nationalId: z.boolean().default(false),
+  birthCertificate: z.boolean().default(false),
+  kcpeResults: z.boolean().default(false),
+  kcseResults: z.boolean().default(false),
+  nhifCard: z.boolean().default(false),
+  passportPhotos: z.boolean().default(false),
+  acceptanceForm: z.boolean().default(false),
+  medicalForm: z.boolean().default(false),
+  imageConsentForm: z.boolean().default(false),
 });
 
 export const applicationFormSchema = z.object({
   personalInfo: personalInfoSchema,
   educationInfo: educationInfoSchema,
   programInfo: programInfoSchema,
+  medicalInfo: medicalInfoSchema,
+  interests: interestsSchema,
+  accommodation: accommodationSchema,
+  documents: documentsSchema,
 });
 
 export type ApplicationForm = z.infer<typeof applicationFormSchema>;
