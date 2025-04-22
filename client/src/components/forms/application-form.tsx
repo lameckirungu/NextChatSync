@@ -3,7 +3,15 @@ import { useForm, FormProvider, useFormContext, Controller } from 'react-hook-fo
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useToast } from '@/hooks/use-toast';
-import { personalInfoSchema, educationInfoSchema, programInfoSchema } from '@shared/schema';
+import { 
+  personalInfoSchema, 
+  educationInfoSchema, 
+  programInfoSchema,
+  medicalInfoSchema,
+  interestsSchema,
+  accommodationSchema,
+  documentsSchema
+} from '@shared/schema';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -23,154 +31,1079 @@ const applicationFormSchema = z.object({
   personalInfo: personalInfoSchema,
   educationInfo: educationInfoSchema,
   programInfo: programInfoSchema,
+  medicalInfo: medicalInfoSchema,
+  interests: interestsSchema,
+  accommodation: accommodationSchema,
+  documents: documentsSchema,
 });
 
 type ApplicationFormValues = z.infer<typeof applicationFormSchema>;
 
 // Component for Step 1: Personal Information
 const PersonalInformationStep = () => {
-  const { control, formState: { errors } } = useFormContext<ApplicationFormValues>();
+  const { control, watch, formState: { errors } } = useFormContext<ApplicationFormValues>();
+  const hasDisability = watch('personalInfo.hasDisability');
+  const maritalStatus = watch('personalInfo.maritalStatus');
+  const fatherIsAlive = watch('personalInfo.fatherDetails.isAlive');
+  const motherIsAlive = watch('personalInfo.motherDetails.isAlive');
 
   return (
-    <div className="space-y-6">
-      <h3 className="text-lg font-medium text-slate-800 mb-6">Personal Information</h3>
+    <div className="space-y-8">
+      <h3 className="text-xl font-medium text-primary-700 mb-4">Personal Information</h3>
       
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-        <div>
-          <Label htmlFor="personalInfo.firstName">First Name</Label>
-          <Controller
-            name="personalInfo.firstName"
-            control={control}
-            render={({ field }) => (
-              <Input
-                id="personalInfo.firstName"
-                {...field}
-                className="mt-1"
-                error={errors.personalInfo?.firstName?.message}
+      {/* Basic Personal Details */}
+      <Card className="shadow-sm">
+        <CardContent className="p-6">
+          <h4 className="text-lg font-medium text-slate-800 mb-4">Basic Details</h4>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <div>
+              <Label htmlFor="personalInfo.surname">Surname</Label>
+              <Controller
+                name="personalInfo.surname"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.surname"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
               />
-            )}
-          />
-          {errors.personalInfo?.firstName && (
-            <p className="mt-1 text-sm text-red-600">{errors.personalInfo.firstName.message}</p>
-          )}
-        </div>
-        
-        <div>
-          <Label htmlFor="personalInfo.lastName">Last Name</Label>
-          <Controller
-            name="personalInfo.lastName"
-            control={control}
-            render={({ field }) => (
-              <Input
-                id="personalInfo.lastName"
-                {...field}
-                className="mt-1"
-                error={errors.personalInfo?.lastName?.message}
+              {errors.personalInfo?.surname && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.surname.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.middleName">Middle Name</Label>
+              <Controller
+                name="personalInfo.middleName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.middleName"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
               />
-            )}
-          />
-          {errors.personalInfo?.lastName && (
-            <p className="mt-1 text-sm text-red-600">{errors.personalInfo.lastName.message}</p>
-          )}
-        </div>
-        
-        <div>
-          <Label htmlFor="personalInfo.dob">Date of Birth</Label>
-          <Controller
-            name="personalInfo.dob"
-            control={control}
-            render={({ field }) => (
-              <Input
-                id="personalInfo.dob"
-                {...field}
-                type="date"
-                className="mt-1"
-                error={errors.personalInfo?.dob?.message}
+              {errors.personalInfo?.middleName && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.middleName.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.lastName">Last Name</Label>
+              <Controller
+                name="personalInfo.lastName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.lastName"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
               />
-            )}
-          />
-          {errors.personalInfo?.dob && (
-            <p className="mt-1 text-sm text-red-600">{errors.personalInfo.dob.message}</p>
-          )}
-        </div>
-        
-        <div>
-          <Label htmlFor="personalInfo.phone">Phone Number</Label>
-          <Controller
-            name="personalInfo.phone"
-            control={control}
-            render={({ field }) => (
-              <Input
-                id="personalInfo.phone"
-                {...field}
-                type="tel"
-                className="mt-1"
-                error={errors.personalInfo?.phone?.message}
+              {errors.personalInfo?.lastName && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.lastName.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.nationalIdNumber">National ID/Birth Certificate Number</Label>
+              <Controller
+                name="personalInfo.nationalIdNumber"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.nationalIdNumber"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
               />
-            )}
-          />
-          {errors.personalInfo?.phone && (
-            <p className="mt-1 text-sm text-red-600">{errors.personalInfo.phone.message}</p>
-          )}
-        </div>
-        
-        <div className="sm:col-span-2">
-          <Label htmlFor="personalInfo.address">Address</Label>
-          <Controller
-            name="personalInfo.address"
-            control={control}
-            render={({ field }) => (
-              <Input
-                id="personalInfo.address"
-                {...field}
-                className="mt-1"
-                error={errors.personalInfo?.address?.message}
+              {errors.personalInfo?.nationalIdNumber && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.nationalIdNumber.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.huduma">Huduma Number (Optional)</Label>
+              <Controller
+                name="personalInfo.huduma"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.huduma"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
               />
-            )}
-          />
-          {errors.personalInfo?.address && (
-            <p className="mt-1 text-sm text-red-600">{errors.personalInfo.address.message}</p>
-          )}
-        </div>
-        
-        <div>
-          <Label htmlFor="personalInfo.city">City</Label>
-          <Controller
-            name="personalInfo.city"
-            control={control}
-            render={({ field }) => (
-              <Input
-                id="personalInfo.city"
-                {...field}
-                className="mt-1"
-                error={errors.personalInfo?.city?.message}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.dateOfBirth">Date of Birth</Label>
+              <Controller
+                name="personalInfo.dateOfBirth"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.dateOfBirth"
+                    {...field}
+                    type="date"
+                    className="mt-1"
+                  />
+                )}
               />
-            )}
-          />
-          {errors.personalInfo?.city && (
-            <p className="mt-1 text-sm text-red-600">{errors.personalInfo.city.message}</p>
-          )}
-        </div>
-        
-        <div>
-          <Label htmlFor="personalInfo.zipCode">ZIP / Postal Code</Label>
-          <Controller
-            name="personalInfo.zipCode"
-            control={control}
-            render={({ field }) => (
-              <Input
-                id="personalInfo.zipCode"
-                {...field}
-                className="mt-1"
-                error={errors.personalInfo?.zipCode?.message}
+              {errors.personalInfo?.dateOfBirth && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.dateOfBirth.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.gender">Gender</Label>
+              <Controller
+                name="personalInfo.gender"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup 
+                    onValueChange={field.onChange} 
+                    defaultValue={field.value} 
+                    className="flex gap-4 mt-2"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Male" id="gender-male" />
+                      <Label htmlFor="gender-male">Male</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Female" id="gender-female" />
+                      <Label htmlFor="gender-female">Female</Label>
+                    </div>
+                  </RadioGroup>
+                )}
               />
+              {errors.personalInfo?.gender && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.gender.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.birthPlace">Place of Birth</Label>
+              <Controller
+                name="personalInfo.birthPlace"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.birthPlace"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.birthPlace && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.birthPlace.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.nationality">Nationality</Label>
+              <Controller
+                name="personalInfo.nationality"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.nationality"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.nationality && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.nationality.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.religion">Religion (Optional)</Label>
+              <Controller
+                name="personalInfo.religion"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.religion"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.nhifNumber">NHIF Card Number</Label>
+              <Controller
+                name="personalInfo.nhifNumber"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.nhifNumber"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.nhifNumber && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.nhifNumber.message as string}</p>
+              )}
+            </div>
+            
+            <div className="sm:col-span-2">
+              <div className="flex items-center space-x-2 mt-4">
+                <Controller
+                  name="personalInfo.hasDisability"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="hasDisability"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
+                />
+                <Label htmlFor="hasDisability">Do you have any disability?</Label>
+              </div>
+              
+              {hasDisability && (
+                <div className="mt-2">
+                  <Label htmlFor="personalInfo.disabilityDetails">Please provide details</Label>
+                  <Controller
+                    name="personalInfo.disabilityDetails"
+                    control={control}
+                    render={({ field }) => (
+                      <Textarea
+                        id="personalInfo.disabilityDetails"
+                        {...field}
+                        className="mt-1"
+                        rows={3}
+                      />
+                    )}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Contact Details */}
+      <Card className="shadow-sm">
+        <CardContent className="p-6">
+          <h4 className="text-lg font-medium text-slate-800 mb-4">Contact Information</h4>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="personalInfo.phoneNumber">Phone Number</Label>
+              <Controller
+                name="personalInfo.phoneNumber"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.phoneNumber"
+                    {...field}
+                    type="tel"
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.phoneNumber && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.phoneNumber.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.email">Email</Label>
+              <Controller
+                name="personalInfo.email"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.email"
+                    {...field}
+                    type="email"
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.email && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.email.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.contactAddress.poBox">P.O. Box</Label>
+              <Controller
+                name="personalInfo.contactAddress.poBox"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.contactAddress.poBox"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.contactAddress?.poBox && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.contactAddress.poBox.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.contactAddress.postalCode">Postal Code</Label>
+              <Controller
+                name="personalInfo.contactAddress.postalCode"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.contactAddress.postalCode"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.contactAddress?.postalCode && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.contactAddress.postalCode.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.contactAddress.town">Town</Label>
+              <Controller
+                name="personalInfo.contactAddress.town"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.contactAddress.town"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.contactAddress?.town && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.contactAddress.town.message as string}</p>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Permanent Residence */}
+      <Card className="shadow-sm">
+        <CardContent className="p-6">
+          <h4 className="text-lg font-medium text-slate-800 mb-4">Permanent Residence</h4>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-3">
+            <div>
+              <Label htmlFor="personalInfo.permanentResidence.village">Village/Town</Label>
+              <Controller
+                name="personalInfo.permanentResidence.village"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.permanentResidence.village"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.permanentResidence?.village && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.permanentResidence.village.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.permanentResidence.nearestTown">Nearest Town</Label>
+              <Controller
+                name="personalInfo.permanentResidence.nearestTown"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.permanentResidence.nearestTown"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.permanentResidence?.nearestTown && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.permanentResidence.nearestTown.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.permanentResidence.location">Location</Label>
+              <Controller
+                name="personalInfo.permanentResidence.location"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.permanentResidence.location"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.permanentResidence?.location && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.permanentResidence.location.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.permanentResidence.chiefName">Chief's Name</Label>
+              <Controller
+                name="personalInfo.permanentResidence.chiefName"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.permanentResidence.chiefName"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.permanentResidence?.chiefName && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.permanentResidence.chiefName.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.permanentResidence.county">County</Label>
+              <Controller
+                name="personalInfo.permanentResidence.county"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.permanentResidence.county"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.permanentResidence?.county && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.permanentResidence.county.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.permanentResidence.subCounty">Sub-County</Label>
+              <Controller
+                name="personalInfo.permanentResidence.subCounty"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.permanentResidence.subCounty"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.permanentResidence?.subCounty && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.permanentResidence.subCounty.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.permanentResidence.constituency">Constituency</Label>
+              <Controller
+                name="personalInfo.permanentResidence.constituency"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.permanentResidence.constituency"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.permanentResidence?.constituency && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.permanentResidence.constituency.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="personalInfo.permanentResidence.nearestPoliceStation">Nearest Police Station</Label>
+              <Controller
+                name="personalInfo.permanentResidence.nearestPoliceStation"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="personalInfo.permanentResidence.nearestPoliceStation"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.personalInfo?.permanentResidence?.nearestPoliceStation && (
+                <p className="mt-1 text-sm text-red-600">{errors.personalInfo.permanentResidence.nearestPoliceStation.message as string}</p>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Marital Status */}
+      <Card className="shadow-sm">
+        <CardContent className="p-6">
+          <h4 className="text-lg font-medium text-slate-800 mb-4">Marital Status</h4>
+          <div className="space-y-4">
+            <Controller
+              name="personalInfo.maritalStatus"
+              control={control}
+              render={({ field }) => (
+                <RadioGroup 
+                  onValueChange={field.onChange} 
+                  defaultValue={field.value} 
+                  className="flex flex-wrap gap-6 mt-2"
+                >
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Single" id="status-single" />
+                    <Label htmlFor="status-single">Single</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Married" id="status-married" />
+                    <Label htmlFor="status-married">Married</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Divorced" id="status-divorced" />
+                    <Label htmlFor="status-divorced">Divorced</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <RadioGroupItem value="Widowed" id="status-widowed" />
+                    <Label htmlFor="status-widowed">Widowed</Label>
+                  </div>
+                </RadioGroup>
+              )}
+            />
+            {errors.personalInfo?.maritalStatus && (
+              <p className="mt-1 text-sm text-red-600">{errors.personalInfo.maritalStatus.message as string}</p>
             )}
-          />
-          {errors.personalInfo?.zipCode && (
-            <p className="mt-1 text-sm text-red-600">{errors.personalInfo.zipCode.message}</p>
-          )}
-        </div>
-      </div>
+            
+            {(maritalStatus === 'Married') && (
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 mt-4 p-4 bg-slate-50 rounded-md">
+                <div>
+                  <Label htmlFor="personalInfo.spouseDetails.name">Spouse's Name</Label>
+                  <Controller
+                    name="personalInfo.spouseDetails.name"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="personalInfo.spouseDetails.name"
+                        {...field}
+                        className="mt-1"
+                      />
+                    )}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="personalInfo.spouseDetails.occupation">Spouse's Occupation</Label>
+                  <Controller
+                    name="personalInfo.spouseDetails.occupation"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="personalInfo.spouseDetails.occupation"
+                        {...field}
+                        className="mt-1"
+                      />
+                    )}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="personalInfo.spouseDetails.phoneNumber">Spouse's Phone Number</Label>
+                  <Controller
+                    name="personalInfo.spouseDetails.phoneNumber"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="personalInfo.spouseDetails.phoneNumber"
+                        {...field}
+                        type="tel"
+                        className="mt-1"
+                      />
+                    )}
+                  />
+                </div>
+                
+                <div>
+                  <Label htmlFor="personalInfo.spouseDetails.childrenCount">Number of Children</Label>
+                  <Controller
+                    name="personalInfo.spouseDetails.childrenCount"
+                    control={control}
+                    render={({ field }) => (
+                      <Input
+                        id="personalInfo.spouseDetails.childrenCount"
+                        {...field}
+                        type="number"
+                        min="0"
+                        className="mt-1"
+                        onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                      />
+                    )}
+                  />
+                </div>
+              </div>
+            )}
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Family Background */}
+      <Card className="shadow-sm">
+        <CardContent className="p-6">
+          <h4 className="text-lg font-medium text-slate-800 mb-4">Family Background</h4>
+          
+          {/* Father's Details */}
+          <div className="space-y-4 mb-6">
+            <h5 className="text-md font-medium text-slate-700">Father's Details</h5>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="personalInfo.fatherDetails.name">Father's Name</Label>
+                <Controller
+                  name="personalInfo.fatherDetails.name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.fatherDetails.name"
+                      {...field}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.fatherDetails?.name && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo.fatherDetails.name.message as string}</p>
+                )}
+              </div>
+              
+              <div className="flex items-center space-x-2 mt-6">
+                <Controller
+                  name="personalInfo.fatherDetails.isAlive"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="fatherIsAlive"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
+                />
+                <Label htmlFor="fatherIsAlive">Is your father alive?</Label>
+              </div>
+              
+              {fatherIsAlive && (
+                <>
+                  <div>
+                    <Label htmlFor="personalInfo.fatherDetails.occupation">Father's Occupation</Label>
+                    <Controller
+                      name="personalInfo.fatherDetails.occupation"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="personalInfo.fatherDetails.occupation"
+                          {...field}
+                          className="mt-1"
+                        />
+                      )}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="personalInfo.fatherDetails.dateOfBirth">Father's Date of Birth</Label>
+                    <Controller
+                      name="personalInfo.fatherDetails.dateOfBirth"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="personalInfo.fatherDetails.dateOfBirth"
+                          {...field}
+                          type="date"
+                          className="mt-1"
+                        />
+                      )}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+          
+          {/* Mother's Details */}
+          <div className="space-y-4 mb-6">
+            <h5 className="text-md font-medium text-slate-700">Mother's Details</h5>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="personalInfo.motherDetails.name">Mother's Name</Label>
+                <Controller
+                  name="personalInfo.motherDetails.name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.motherDetails.name"
+                      {...field}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.motherDetails?.name && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo.motherDetails.name.message as string}</p>
+                )}
+              </div>
+              
+              <div className="flex items-center space-x-2 mt-6">
+                <Controller
+                  name="personalInfo.motherDetails.isAlive"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="motherIsAlive"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
+                />
+                <Label htmlFor="motherIsAlive">Is your mother alive?</Label>
+              </div>
+              
+              {motherIsAlive && (
+                <>
+                  <div>
+                    <Label htmlFor="personalInfo.motherDetails.occupation">Mother's Occupation</Label>
+                    <Controller
+                      name="personalInfo.motherDetails.occupation"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="personalInfo.motherDetails.occupation"
+                          {...field}
+                          className="mt-1"
+                        />
+                      )}
+                    />
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="personalInfo.motherDetails.dateOfBirth">Mother's Date of Birth</Label>
+                    <Controller
+                      name="personalInfo.motherDetails.dateOfBirth"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="personalInfo.motherDetails.dateOfBirth"
+                          {...field}
+                          type="date"
+                          className="mt-1"
+                        />
+                      )}
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+          
+          {/* Number of siblings */}
+          <div>
+            <Label htmlFor="personalInfo.siblingsCount">Number of Siblings</Label>
+            <Controller
+              name="personalInfo.siblingsCount"
+              control={control}
+              render={({ field }) => (
+                <Input
+                  id="personalInfo.siblingsCount"
+                  {...field}
+                  type="number"
+                  min="0"
+                  className="mt-1 w-32"
+                  onChange={(e) => field.onChange(parseInt(e.target.value) || 0)}
+                />
+              )}
+            />
+          </div>
+        </CardContent>
+      </Card>
+      
+      {/* Emergency Contacts */}
+      <Card className="shadow-sm">
+        <CardContent className="p-6">
+          <h4 className="text-lg font-medium text-slate-800 mb-4">Emergency Contacts (at least 2)</h4>
+          
+          {/* First Emergency Contact */}
+          <div className="mb-8">
+            <h5 className="text-md font-medium text-slate-700 mb-3">Emergency Contact 1</h5>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.0.name">Name</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.0.name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.0.name"
+                      {...field}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[0]?.name && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[0]?.name?.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.0.relationship">Relationship</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.0.relationship"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.0.relationship"
+                      {...field}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[0]?.relationship && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[0]?.relationship?.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.0.phoneNumber">Phone Number</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.0.phoneNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.0.phoneNumber"
+                      {...field}
+                      type="tel"
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[0]?.phoneNumber && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[0]?.phoneNumber?.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.0.email">Email</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.0.email"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.0.email"
+                      {...field}
+                      type="email"
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[0]?.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[0]?.email?.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.0.poBox">P.O. Box</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.0.poBox"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.0.poBox"
+                      {...field}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[0]?.poBox && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[0]?.poBox?.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.0.postalCode">Postal Code</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.0.postalCode"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.0.postalCode"
+                      {...field}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[0]?.postalCode && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[0]?.postalCode?.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.0.town">Town</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.0.town"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.0.town"
+                      {...field}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[0]?.town && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[0]?.town?.message as string}</p>
+                )}
+              </div>
+            </div>
+          </div>
+          
+          {/* Second Emergency Contact */}
+          <div>
+            <h5 className="text-md font-medium text-slate-700 mb-3">Emergency Contact 2</h5>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.1.name">Name</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.1.name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.1.name"
+                      {...field}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[1]?.name && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[1]?.name?.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.1.relationship">Relationship</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.1.relationship"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.1.relationship"
+                      {...field}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[1]?.relationship && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[1]?.relationship?.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.1.phoneNumber">Phone Number</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.1.phoneNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.1.phoneNumber"
+                      {...field}
+                      type="tel"
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[1]?.phoneNumber && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[1]?.phoneNumber?.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.1.email">Email</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.1.email"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.1.email"
+                      {...field}
+                      type="email"
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[1]?.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[1]?.email?.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.1.poBox">P.O. Box</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.1.poBox"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.1.poBox"
+                      {...field}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[1]?.poBox && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[1]?.poBox?.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.1.postalCode">Postal Code</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.1.postalCode"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.1.postalCode"
+                      {...field}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[1]?.postalCode && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[1]?.postalCode?.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="personalInfo.emergencyContacts.1.town">Town</Label>
+                <Controller
+                  name="personalInfo.emergencyContacts.1.town"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="personalInfo.emergencyContacts.1.town"
+                      {...field}
+                      className="mt-1"
+                    />
+                  )}
+                />
+                {errors.personalInfo?.emergencyContacts?.[1]?.town && (
+                  <p className="mt-1 text-sm text-red-600">{errors.personalInfo?.emergencyContacts?.[1]?.town?.message as string}</p>
+                )}
+              </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
@@ -635,33 +1568,163 @@ const DocumentsStep = ({ applicationId }: { applicationId?: number }) => {
 // Default form values
 const defaultFormValues: ApplicationFormValues = {
   personalInfo: {
-    firstName: '',
+    surname: '',
+    middleName: '',
     lastName: '',
-    dob: '',
-    phone: '',
-    address: '',
-    city: '',
-    zipCode: '',
+    nationalIdNumber: '',
+    huduma: '',
+    dateOfBirth: '',
+    gender: 'Male' as "Male" | "Female",
+    hasDisability: false,
+    disabilityDetails: '',
+    nhifNumber: '',
+    religion: '',
+    nationality: 'Kenyan',
+    contactAddress: {
+      poBox: '',
+      postalCode: '',
+      town: '',
+    },
+    phoneNumber: '',
+    email: '',
+    maritalStatus: 'Single' as "Single" | "Married" | "Divorced" | "Widowed",
+    spouseDetails: {
+      name: '',
+      occupation: '',
+      phoneNumber: '',
+      childrenCount: 0,
+    },
+    fatherDetails: {
+      name: '',
+      isAlive: true,
+      occupation: '',
+      dateOfBirth: '',
+    },
+    motherDetails: {
+      name: '',
+      isAlive: true,
+      occupation: '',
+      dateOfBirth: '',
+    },
+    siblingsCount: 0,
+    birthPlace: '',
+    permanentResidence: {
+      village: '',
+      nearestTown: '',
+      location: '',
+      chiefName: '',
+      county: '',
+      subCounty: '',
+      constituency: '',
+      nearestPoliceStation: '',
+    },
+    emergencyContacts: [
+      {
+        name: '',
+        relationship: '',
+        poBox: '',
+        postalCode: '',
+        town: '',
+        phoneNumber: '',
+        email: '',
+      },
+      {
+        name: '',
+        relationship: '',
+        poBox: '',
+        postalCode: '',
+        town: '',
+        phoneNumber: '',
+        email: '',
+      }
+    ],
   },
   educationInfo: {
-    highSchool: {
+    secondarySchool: {
       name: '',
-      city: '',
-      state: '',
-      startDate: '',
-      endDate: '',
-      gpa: '',
+      indexNumber: '',
+      yearCompleted: '',
+      results: '',
     },
-    college: {
-      attended: false,
-    }
+    primarySchool: {
+      name: '',
+      indexNumber: '',
+      yearCompleted: '',
+      results: '',
+    },
+    otherInstitutions: '',
   },
   programInfo: {
-    type: '',
-    major: '',
-    startTerm: '',
-    campus: 'main',
-    question: '',
+    school: '',
+    programme: '',
+    academicYear: '',
+    campus: 'Main Campus',
+    yearOfStudy: '',
+    semester: '',
+    entryIntake: '',
+    studyMode: 'Full Time' as "Full Time" | "Weekend" | "Evening" | "Part time",
+  },
+  medicalInfo: {
+    hospitalAdmission: {
+      wasAdmitted: false,
+      details: '',
+    },
+    medicalConditions: {
+      hasTuberculosis: false,
+      hasNervousDisease: false,
+      hasHeartDisease: false,
+      hasDigestiveDisease: false,
+      hasAllergies: false,
+      hasSTDs: false,
+      hasPolio: false,
+      otherConditions: '',
+    },
+    familyMedicalHistory: {
+      familyTuberculosis: false,
+      familyMentalIllness: false,
+      familyDiabetes: false,
+      familyHeartDisease: false,
+    },
+    immunization: {
+      smallpox: {
+        isImmunized: false,
+        immunizationDate: '',
+      },
+      tetanus: {
+        isImmunized: false,
+        immunizationDate: '',
+      },
+      polio: {
+        isImmunized: false,
+        immunizationDate: '',
+      },
+    },
+  },
+  interests: {
+    sports: '',
+    clubs: '',
+    additionalInfo: '',
+  },
+  accommodation: {
+    residenceType: 'Resident' as "Resident" | "Non-resident",
+    residentDetails: {
+      hostelName: '',
+      roomNumber: '',
+    },
+    nonResidentDetails: {
+      residencePlace: '',
+    },
+  },
+  documents: {
+    nationalId: false,
+    birthCertificate: false,
+    kcpeResults: false,
+    kcseResults: false,
+    nhifCard: false,
+    passportPhotos: false,
+    acceptanceForm: false,
+    medicalForm: false,
+    imageConsentForm: false,
   }
 };
 
