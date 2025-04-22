@@ -2406,41 +2406,72 @@ export function ApplicationForm({ application, onSaveDraft, onSubmit }: Applicat
       <form onSubmit={handleSubmit(submitApplication)}>
         {/* Progress Steps */}
         <div className="px-4 py-4 sm:px-6 bg-slate-50 border-b border-slate-200">
-          <div className="flex justify-between items-center">
+          <div className="grid grid-cols-7 gap-2 items-center">
             <button 
               type="button" 
-              className={`text-sm font-medium ${currentStep === 1 ? 'text-primary-600' : 'text-slate-500'} step-btn`}
+              className={`text-xs sm:text-sm font-medium ${currentStep === 1 ? 'text-primary-600' : 'text-slate-500'} step-btn text-center`}
               onClick={() => goToStep(1)}
             >
-              Personal Information
+              Personal
             </button>
-            <div className={`h-1 w-8 bg-${isStepValid(1) ? 'primary-500' : 'slate-200'} rounded sm:w-16`}></div>
             
             <button 
               type="button" 
-              className={`text-sm font-medium ${currentStep === 2 ? 'text-primary-600' : 'text-slate-500'} step-btn`}
+              className={`text-xs sm:text-sm font-medium ${currentStep === 2 ? 'text-primary-600' : 'text-slate-500'} step-btn text-center`}
               onClick={() => goToStep(2)}
             >
-              Education History
+              Education
             </button>
-            <div className={`h-1 w-8 bg-${isStepValid(2) ? 'primary-500' : 'slate-200'} rounded sm:w-16`}></div>
             
             <button 
               type="button" 
-              className={`text-sm font-medium ${currentStep === 3 ? 'text-primary-600' : 'text-slate-500'} step-btn`}
+              className={`text-xs sm:text-sm font-medium ${currentStep === 3 ? 'text-primary-600' : 'text-slate-500'} step-btn text-center`}
               onClick={() => goToStep(3)}
             >
-              Course Selection
+              Program
             </button>
-            <div className={`h-1 w-8 bg-${isStepValid(3) ? 'primary-500' : 'slate-200'} rounded sm:w-16`}></div>
             
             <button 
               type="button" 
-              className={`text-sm font-medium ${currentStep === 4 ? 'text-primary-600' : 'text-slate-500'} step-btn`}
+              className={`text-xs sm:text-sm font-medium ${currentStep === 4 ? 'text-primary-600' : 'text-slate-500'} step-btn text-center`}
               onClick={() => goToStep(4)}
+            >
+              Medical
+            </button>
+            
+            <button 
+              type="button" 
+              className={`text-xs sm:text-sm font-medium ${currentStep === 5 ? 'text-primary-600' : 'text-slate-500'} step-btn text-center`}
+              onClick={() => goToStep(5)}
+            >
+              Interests
+            </button>
+            
+            <button 
+              type="button" 
+              className={`text-xs sm:text-sm font-medium ${currentStep === 6 ? 'text-primary-600' : 'text-slate-500'} step-btn text-center`}
+              onClick={() => goToStep(6)}
+            >
+              Housing
+            </button>
+            
+            <button 
+              type="button" 
+              className={`text-xs sm:text-sm font-medium ${currentStep === 7 ? 'text-primary-600' : 'text-slate-500'} step-btn text-center`}
+              onClick={() => goToStep(7)}
             >
               Documents
             </button>
+          </div>
+          
+          <div className="grid grid-cols-7 gap-2 mt-2">
+            <div className={`h-1 w-full bg-${isStepValid(1) ? 'primary-500' : 'slate-200'} rounded`}></div>
+            <div className={`h-1 w-full bg-${isStepValid(2) ? 'primary-500' : 'slate-200'} rounded`}></div>
+            <div className={`h-1 w-full bg-${isStepValid(3) ? 'primary-500' : 'slate-200'} rounded`}></div>
+            <div className={`h-1 w-full bg-${isStepValid(4) ? 'primary-500' : 'slate-200'} rounded`}></div>
+            <div className={`h-1 w-full bg-${isStepValid(5) ? 'primary-500' : 'slate-200'} rounded`}></div>
+            <div className={`h-1 w-full bg-${isStepValid(6) ? 'primary-500' : 'slate-200'} rounded`}></div>
+            <div className={`h-1 w-full bg-${isStepValid(7) ? 'primary-500' : 'slate-200'} rounded`}></div>
           </div>
         </div>
         
@@ -2460,8 +2491,23 @@ export function ApplicationForm({ application, onSaveDraft, onSubmit }: Applicat
             <CourseSelectionStep />
           </div>
           
-          {/* Step 4: Documents */}
+          {/* Step 4: Medical Information */}
           <div className={currentStep === 4 ? '' : 'hidden'}>
+            <MedicalInformationStep />
+          </div>
+          
+          {/* Step 5: Interests */}
+          <div className={currentStep === 5 ? '' : 'hidden'}>
+            <InterestsStep />
+          </div>
+          
+          {/* Step 6: Accommodation */}
+          <div className={currentStep === 6 ? '' : 'hidden'}>
+            <AccommodationStep />
+          </div>
+          
+          {/* Step 7: Documents */}
+          <div className={currentStep === 7 ? '' : 'hidden'}>
             <DocumentsStep applicationId={application?.id} />
           </div>
           
@@ -2476,7 +2522,10 @@ export function ApplicationForm({ application, onSaveDraft, onSubmit }: Applicat
                 Back: {
                   currentStep === 2 ? 'Personal Information' :
                   currentStep === 3 ? 'Education History' :
-                  'Course Selection'
+                  currentStep === 4 ? 'Course Selection' :
+                  currentStep === 5 ? 'Medical Information' :
+                  currentStep === 6 ? 'Interests' :
+                  'Accommodation'
                 }
               </Button>
             ) : (
@@ -2491,6 +2540,9 @@ export function ApplicationForm({ application, onSaveDraft, onSubmit }: Applicat
                 Next: {
                   currentStep === 1 ? 'Education History' :
                   currentStep === 2 ? 'Course Selection' :
+                  currentStep === 3 ? 'Medical Information' :
+                  currentStep === 4 ? 'Interests' :
+                  currentStep === 5 ? 'Accommodation' :
                   'Documents'
                 }
               </Button>
