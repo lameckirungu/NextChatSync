@@ -1538,47 +1538,537 @@ const CourseSelectionStep = () => {
   );
 };
 
-// Component for Step 4: Documents
+// Component for Step 4: Medical Information
+const MedicalInformationStep = () => {
+  const { control, watch, formState: { errors } } = useFormContext<ApplicationFormValues>();
+  const hasChronicIllness = watch('medicalInfo.hasChronicIllness');
+  const needsSpecialDiet = watch('medicalInfo.needsSpecialDiet');
+  const hasMedicalInsurance = watch('medicalInfo.hasMedicalInsurance');
+
+  return (
+    <div className="space-y-8">
+      <h3 className="text-xl font-medium text-primary-700 mb-4">Medical Information</h3>
+      
+      <Card className="shadow-sm">
+        <CardContent className="p-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <div className="flex items-center space-x-2 mt-2">
+                <Controller
+                  name="medicalInfo.hasChronicIllness"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="hasChronicIllness"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
+                />
+                <Label htmlFor="hasChronicIllness">Do you have any chronic illness?</Label>
+              </div>
+              
+              {hasChronicIllness && (
+                <div className="mt-4">
+                  <Label htmlFor="medicalInfo.chronicIllnessDetails">Please provide details</Label>
+                  <Controller
+                    name="medicalInfo.chronicIllnessDetails"
+                    control={control}
+                    render={({ field }) => (
+                      <Textarea
+                        id="medicalInfo.chronicIllnessDetails"
+                        {...field}
+                        className="mt-1"
+                        rows={3}
+                      />
+                    )}
+                  />
+                  {errors.medicalInfo?.chronicIllnessDetails && (
+                    <p className="mt-1 text-sm text-red-600">{errors.medicalInfo.chronicIllnessDetails.message as string}</p>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            <div className="sm:col-span-2">
+              <div className="flex items-center space-x-2 mt-4">
+                <Controller
+                  name="medicalInfo.needsSpecialDiet"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="needsSpecialDiet"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
+                />
+                <Label htmlFor="needsSpecialDiet">Do you require a special diet?</Label>
+              </div>
+              
+              {needsSpecialDiet && (
+                <div className="mt-4">
+                  <Label htmlFor="medicalInfo.specialDietDetails">Please provide details</Label>
+                  <Controller
+                    name="medicalInfo.specialDietDetails"
+                    control={control}
+                    render={({ field }) => (
+                      <Textarea
+                        id="medicalInfo.specialDietDetails"
+                        {...field}
+                        className="mt-1"
+                        rows={3}
+                      />
+                    )}
+                  />
+                  {errors.medicalInfo?.specialDietDetails && (
+                    <p className="mt-1 text-sm text-red-600">{errors.medicalInfo.specialDietDetails.message as string}</p>
+                  )}
+                </div>
+              )}
+            </div>
+            
+            <div className="sm:col-span-2">
+              <div className="flex items-center space-x-2 mt-4">
+                <Controller
+                  name="medicalInfo.hasMedicalInsurance"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="hasMedicalInsurance"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
+                />
+                <Label htmlFor="hasMedicalInsurance">Do you have medical insurance?</Label>
+              </div>
+              
+              {hasMedicalInsurance && (
+                <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div>
+                    <Label htmlFor="medicalInfo.insuranceProvider">Insurance Provider</Label>
+                    <Controller
+                      name="medicalInfo.insuranceProvider"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="medicalInfo.insuranceProvider"
+                          {...field}
+                          className="mt-1"
+                        />
+                      )}
+                    />
+                    {errors.medicalInfo?.insuranceProvider && (
+                      <p className="mt-1 text-sm text-red-600">{errors.medicalInfo.insuranceProvider.message as string}</p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="medicalInfo.insurancePolicyNumber">Policy Number</Label>
+                    <Controller
+                      name="medicalInfo.insurancePolicyNumber"
+                      control={control}
+                      render={({ field }) => (
+                        <Input
+                          id="medicalInfo.insurancePolicyNumber"
+                          {...field}
+                          className="mt-1"
+                        />
+                      )}
+                    />
+                    {errors.medicalInfo?.insurancePolicyNumber && (
+                      <p className="mt-1 text-sm text-red-600">{errors.medicalInfo.insurancePolicyNumber.message as string}</p>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div className="sm:col-span-2">
+              <Label htmlFor="medicalInfo.bloodGroup">Blood Group</Label>
+              <Controller
+                name="medicalInfo.bloodGroup"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger className="mt-1 w-full">
+                      <SelectValue placeholder="Select your blood group" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="A+">A+</SelectItem>
+                      <SelectItem value="A-">A-</SelectItem>
+                      <SelectItem value="B+">B+</SelectItem>
+                      <SelectItem value="B-">B-</SelectItem>
+                      <SelectItem value="AB+">AB+</SelectItem>
+                      <SelectItem value="AB-">AB-</SelectItem>
+                      <SelectItem value="O+">O+</SelectItem>
+                      <SelectItem value="O-">O-</SelectItem>
+                      <SelectItem value="Unknown">Unknown</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.medicalInfo?.bloodGroup && (
+                <p className="mt-1 text-sm text-red-600">{errors.medicalInfo.bloodGroup.message as string}</p>
+              )}
+            </div>
+            
+            <div className="sm:col-span-2">
+              <Label htmlFor="medicalInfo.allergies">Allergies (if any)</Label>
+              <Controller
+                name="medicalInfo.allergies"
+                control={control}
+                render={({ field }) => (
+                  <Textarea
+                    id="medicalInfo.allergies"
+                    {...field}
+                    className="mt-1"
+                    rows={3}
+                    placeholder="List any allergies you have"
+                  />
+                )}
+              />
+            </div>
+            
+            <div className="sm:col-span-2">
+              <Label htmlFor="medicalInfo.emergencyContact.name">Emergency Contact Name</Label>
+              <Controller
+                name="medicalInfo.emergencyContact.name"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="medicalInfo.emergencyContact.name"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.medicalInfo?.emergencyContact?.name && (
+                <p className="mt-1 text-sm text-red-600">{errors.medicalInfo.emergencyContact.name.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="medicalInfo.emergencyContact.relationship">Relationship</Label>
+              <Controller
+                name="medicalInfo.emergencyContact.relationship"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="medicalInfo.emergencyContact.relationship"
+                    {...field}
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.medicalInfo?.emergencyContact?.relationship && (
+                <p className="mt-1 text-sm text-red-600">{errors.medicalInfo.emergencyContact.relationship.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="medicalInfo.emergencyContact.phone">Phone Number</Label>
+              <Controller
+                name="medicalInfo.emergencyContact.phone"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="medicalInfo.emergencyContact.phone"
+                    {...field}
+                    type="tel"
+                    className="mt-1"
+                  />
+                )}
+              />
+              {errors.medicalInfo?.emergencyContact?.phone && (
+                <p className="mt-1 text-sm text-red-600">{errors.medicalInfo.emergencyContact.phone.message as string}</p>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+// Component for Step 5: Interests
+const InterestsStep = () => {
+  const { control, formState: { errors } } = useFormContext<ApplicationFormValues>();
+
+  return (
+    <div className="space-y-8">
+      <h3 className="text-xl font-medium text-primary-700 mb-4">Personal Interests</h3>
+      
+      <Card className="shadow-sm">
+        <CardContent className="p-6">
+          <div className="grid grid-cols-1 gap-6">
+            <div>
+              <Label htmlFor="interests.sports">Sports Interests</Label>
+              <Controller
+                name="interests.sports"
+                control={control}
+                render={({ field }) => (
+                  <Textarea
+                    id="interests.sports"
+                    {...field}
+                    className="mt-1"
+                    rows={3}
+                    placeholder="List any sports you're interested in participating"
+                  />
+                )}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="interests.clubs">Clubs & Societies</Label>
+              <Controller
+                name="interests.clubs"
+                control={control}
+                render={({ field }) => (
+                  <Textarea
+                    id="interests.clubs"
+                    {...field}
+                    className="mt-1"
+                    rows={3}
+                    placeholder="List any clubs or societies you're interested in joining"
+                  />
+                )}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="interests.hobbies">Hobbies & Talents</Label>
+              <Controller
+                name="interests.hobbies"
+                control={control}
+                render={({ field }) => (
+                  <Textarea
+                    id="interests.hobbies"
+                    {...field}
+                    className="mt-1"
+                    rows={3}
+                    placeholder="Describe your hobbies and talents"
+                  />
+                )}
+              />
+            </div>
+            
+            <div>
+              <Label htmlFor="interests.careerGoals">Career Goals</Label>
+              <Controller
+                name="interests.careerGoals"
+                control={control}
+                render={({ field }) => (
+                  <Textarea
+                    id="interests.careerGoals"
+                    {...field}
+                    className="mt-1"
+                    rows={3}
+                    placeholder="Describe your career aspirations"
+                  />
+                )}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+// Component for Step 6: Accommodation
+const AccommodationStep = () => {
+  const { control, watch, formState: { errors } } = useFormContext<ApplicationFormValues>();
+  const needsAccommodation = watch('accommodation.needsAccommodation');
+
+  return (
+    <div className="space-y-8">
+      <h3 className="text-xl font-medium text-primary-700 mb-4">Accommodation Preferences</h3>
+      
+      <Card className="shadow-sm">
+        <CardContent className="p-6">
+          <div className="grid grid-cols-1 gap-6">
+            <div>
+              <div className="flex items-center space-x-2 mb-4">
+                <Controller
+                  name="accommodation.needsAccommodation"
+                  control={control}
+                  render={({ field }) => (
+                    <Checkbox
+                      id="needsAccommodation"
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  )}
+                />
+                <Label htmlFor="needsAccommodation">I need university accommodation</Label>
+              </div>
+              
+              {needsAccommodation && (
+                <div className="space-y-4 mt-4">
+                  <div>
+                    <Label htmlFor="accommodation.roomPreference">Room Preference</Label>
+                    <Controller
+                      name="accommodation.roomPreference"
+                      control={control}
+                      render={({ field }) => (
+                        <Select
+                          value={field.value}
+                          onValueChange={field.onChange}
+                        >
+                          <SelectTrigger className="mt-1 w-full">
+                            <SelectValue placeholder="Select room preference" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="Single">Single Room</SelectItem>
+                            <SelectItem value="Shared">Shared Room</SelectItem>
+                            <SelectItem value="Any">No Preference</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      )}
+                    />
+                    {errors.accommodation?.roomPreference && (
+                      <p className="mt-1 text-sm text-red-600">{errors.accommodation.roomPreference.message as string}</p>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="accommodation.specialRequest">Special Accommodation Requests</Label>
+                    <Controller
+                      name="accommodation.specialRequest"
+                      control={control}
+                      render={({ field }) => (
+                        <Textarea
+                          id="accommodation.specialRequest"
+                          {...field}
+                          className="mt-1"
+                          rows={3}
+                          placeholder="List any special accommodation needs"
+                        />
+                      )}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="accommodation.alternativeAddress">Alternative Address (if not living in university accommodation)</Label>
+              <Controller
+                name="accommodation.alternativeAddress"
+                control={control}
+                render={({ field }) => (
+                  <Textarea
+                    id="accommodation.alternativeAddress"
+                    {...field}
+                    className="mt-1"
+                    rows={3}
+                    placeholder="Provide your alternative address if you will not be living in university accommodation"
+                  />
+                )}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
+
+// Component for Step 7: Documents
 const DocumentsStep = ({ applicationId }: { applicationId?: number }) => {
   return (
-    <div className="space-y-6">
-      <h3 className="text-lg font-medium text-slate-800 mb-6">Required Documents</h3>
+    <div className="space-y-8">
+      <h3 className="text-xl font-medium text-primary-700 mb-4">Required Documents</h3>
       
-      <div className="space-y-6">
-        {applicationId ? (
-          <>
-            <DocumentUpload
-              label="Transcript"
-              documentType="transcript"
-              applicationId={applicationId}
-              accept=".pdf,.jpg,.jpeg,.png"
-              maxSize={10}
-              required
-            />
-            
-            <DocumentUpload
-              label="Personal Statement"
-              documentType="personal_statement"
-              applicationId={applicationId}
-              accept=".pdf,.doc,.docx"
-              maxSize={10}
-              required
-            />
-            
-            <DocumentUpload
-              label="Additional Documents (Optional)"
-              documentType="additional"
-              applicationId={applicationId}
-              accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
-              maxSize={10}
-            />
-          </>
-        ) : (
-          <div className="text-center py-8 text-slate-500">
-            Please save your application first to enable document uploads.
+      <Card className="shadow-sm">
+        <CardContent className="p-6">
+          <div className="space-y-6">
+            {applicationId ? (
+              <>
+                <DocumentUpload
+                  label="National ID / Birth Certificate"
+                  documentType="id_document"
+                  applicationId={applicationId}
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  maxSize={5}
+                  required
+                />
+                
+                <DocumentUpload
+                  label="KCSE Certificate / Result Slip"
+                  documentType="kcse_certificate"
+                  applicationId={applicationId}
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  maxSize={5}
+                  required
+                />
+                
+                <DocumentUpload
+                  label="KCPE Certificate"
+                  documentType="kcpe_certificate"
+                  applicationId={applicationId}
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  maxSize={5}
+                  required
+                />
+                
+                <DocumentUpload
+                  label="Passport Photo"
+                  documentType="passport_photo"
+                  applicationId={applicationId}
+                  accept=".jpg,.jpeg,.png"
+                  maxSize={2}
+                  required
+                />
+                
+                <DocumentUpload
+                  label="School Leaving Certificate"
+                  documentType="leaving_certificate"
+                  applicationId={applicationId}
+                  accept=".pdf,.jpg,.jpeg,.png"
+                  maxSize={5}
+                />
+                
+                <DocumentUpload
+                  label="Other Supporting Documents"
+                  documentType="other_documents"
+                  applicationId={applicationId}
+                  accept=".pdf,.jpg,.jpeg,.png,.doc,.docx"
+                  maxSize={10}
+                />
+                
+                <div className="mt-6">
+                  <div className="flex items-center space-x-2 mt-4">
+                    <Controller
+                      name="documents.imageConsentForm"
+                      control={control}
+                      render={({ field }) => (
+                        <Checkbox
+                          id="imageConsentForm"
+                          checked={field.value}
+                          onCheckedChange={field.onChange}
+                        />
+                      )}
+                    />
+                    <Label htmlFor="imageConsentForm" className="text-sm">
+                      I consent to the use of my image/photograph for official university purposes, including marketing materials and publications.
+                    </Label>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <div className="text-center py-8 text-slate-500">
+                Please save your application first to enable document uploads.
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
@@ -1776,7 +2266,7 @@ export function ApplicationForm({ application, onSaveDraft, onSubmit }: Applicat
   
   const { handleSubmit, formState, getValues, reset } = methods;
 
-  const totalSteps = 4;
+  const totalSteps = 7; // Updated total number of steps for all sections
   
   const goToNextStep = () => {
     if (currentStep < totalSteps) {
