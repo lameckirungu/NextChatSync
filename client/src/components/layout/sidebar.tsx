@@ -65,49 +65,41 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 Admin Portal
               </h2>
               <nav className="mt-5 flex-1 space-y-1">
-                <Link href="/admin">
-                  <a className={cn(
-                    "flex items-center px-2 py-2 text-sm font-medium rounded-md",
-                    isLinkActive("/admin")
-                      ? "bg-primary-50 text-primary-700"
-                      : "text-slate-600 hover:bg-slate-100"
-                  )}>
-                    <Home className="mr-3 h-5 w-5" />
-                    Dashboard
-                  </a>
+                <Link href="/admin" className={cn(
+                  "flex items-center px-2 py-2 text-sm font-medium rounded-md",
+                  isLinkActive("/admin")
+                    ? "bg-primary-50 text-primary-700"
+                    : "text-slate-600 hover:bg-slate-100"
+                )}>
+                  <Home className="mr-3 h-5 w-5" />
+                  Dashboard
                 </Link>
-                <Link href="/admin/applications">
-                  <a className={cn(
-                    "flex items-center px-2 py-2 text-sm font-medium rounded-md",
-                    isLinkActive("/admin/applications")
-                      ? "bg-primary-50 text-primary-700"
-                      : "text-slate-600 hover:bg-slate-100"
-                  )}>
-                    <FileText className="mr-3 h-5 w-5" />
-                    Applications
-                  </a>
+                <Link href="/admin/applications" className={cn(
+                  "flex items-center px-2 py-2 text-sm font-medium rounded-md",
+                  isLinkActive("/admin/applications")
+                    ? "bg-primary-50 text-primary-700"
+                    : "text-slate-600 hover:bg-slate-100"
+                )}>
+                  <FileText className="mr-3 h-5 w-5" />
+                  Applications
                 </Link>
-                <Link href="/admin/users">
-                  <a className={cn(
-                    "flex items-center px-2 py-2 text-sm font-medium rounded-md",
-                    isLinkActive("/admin/users")
-                      ? "bg-primary-50 text-primary-700"
-                      : "text-slate-600 hover:bg-slate-100"
-                  )}>
-                    <Users className="mr-3 h-5 w-5" />
-                    Users
-                  </a>
+                <Link href="/admin/users" className={cn(
+                  "flex items-center px-2 py-2 text-sm font-medium rounded-md",
+                  isLinkActive("/admin/users")
+                    ? "bg-primary-50 text-primary-700"
+                    : "text-slate-600 hover:bg-slate-100"
+                )}>
+                  <Users className="mr-3 h-5 w-5" />
+                  Users
                 </Link>
-                <Link href="/admin/settings">
-                  <a className={cn(
-                    "flex items-center px-2 py-2 text-sm font-medium rounded-md",
-                    isLinkActive("/admin/settings")
-                      ? "bg-primary-50 text-primary-700"
-                      : "text-slate-600 hover:bg-slate-100"
-                  )}>
-                    <Settings className="mr-3 h-5 w-5" />
-                    Settings
-                  </a>
+                <Link href="/admin/settings" className={cn(
+                  "flex items-center px-2 py-2 text-sm font-medium rounded-md",
+                  isLinkActive("/admin/settings")
+                    ? "bg-primary-50 text-primary-700"
+                    : "text-slate-600 hover:bg-slate-100"
+                )}>
+                  <Settings className="mr-3 h-5 w-5" />
+                  Settings
                 </Link>
               </nav>
             </div>
@@ -117,49 +109,41 @@ export function Sidebar({ open, onClose }: SidebarProps) {
                 Student Portal
               </h2>
               <nav className="mt-5 flex-1 space-y-1">
-                <Link href="/dashboard">
-                  <a className={cn(
-                    "flex items-center px-2 py-2 text-sm font-medium rounded-md",
-                    isLinkActive("/dashboard")
-                      ? "bg-primary-50 text-primary-700"
-                      : "text-slate-600 hover:bg-slate-100"
-                  )}>
-                    <Home className="mr-3 h-5 w-5" />
-                    Dashboard
-                  </a>
+                <Link href="/dashboard" className={cn(
+                  "flex items-center px-2 py-2 text-sm font-medium rounded-md",
+                  isLinkActive("/dashboard")
+                    ? "bg-primary-50 text-primary-700"
+                    : "text-slate-600 hover:bg-slate-100"
+                )}>
+                  <Home className="mr-3 h-5 w-5" />
+                  Dashboard
                 </Link>
-                <Link href="/dashboard/application">
-                  <a className={cn(
-                    "flex items-center px-2 py-2 text-sm font-medium rounded-md",
-                    isLinkActive("/dashboard/application")
-                      ? "bg-primary-50 text-primary-700"
-                      : "text-slate-600 hover:bg-slate-100"
-                  )}>
-                    <FileText className="mr-3 h-5 w-5" />
-                    My Application
-                  </a>
+                <Link href="/dashboard/application" className={cn(
+                  "flex items-center px-2 py-2 text-sm font-medium rounded-md",
+                  isLinkActive("/dashboard/application")
+                    ? "bg-primary-50 text-primary-700"
+                    : "text-slate-600 hover:bg-slate-100"
+                )}>
+                  <FileText className="mr-3 h-5 w-5" />
+                  My Application
                 </Link>
-                <Link href="/dashboard/profile">
-                  <a className={cn(
-                    "flex items-center px-2 py-2 text-sm font-medium rounded-md",
-                    isLinkActive("/dashboard/profile")
-                      ? "bg-primary-50 text-primary-700"
-                      : "text-slate-600 hover:bg-slate-100"
-                  )}>
-                    <User className="mr-3 h-5 w-5" />
-                    Profile
-                  </a>
+                <Link href="/dashboard/profile" className={cn(
+                  "flex items-center px-2 py-2 text-sm font-medium rounded-md",
+                  isLinkActive("/dashboard/profile")
+                    ? "bg-primary-50 text-primary-700"
+                    : "text-slate-600 hover:bg-slate-100"
+                )}>
+                  <User className="mr-3 h-5 w-5" />
+                  Profile
                 </Link>
-                <Link href="/dashboard/help">
-                  <a className={cn(
-                    "flex items-center px-2 py-2 text-sm font-medium rounded-md",
-                    isLinkActive("/dashboard/help")
-                      ? "bg-primary-50 text-primary-700"
-                      : "text-slate-600 hover:bg-slate-100"
-                  )}>
-                    <HelpCircle className="mr-3 h-5 w-5" />
-                    Help
-                  </a>
+                <Link href="/dashboard/help" className={cn(
+                  "flex items-center px-2 py-2 text-sm font-medium rounded-md",
+                  isLinkActive("/dashboard/help")
+                    ? "bg-primary-50 text-primary-700"
+                    : "text-slate-600 hover:bg-slate-100"
+                )}>
+                  <HelpCircle className="mr-3 h-5 w-5" />
+                  Help
                 </Link>
               </nav>
             </div>
