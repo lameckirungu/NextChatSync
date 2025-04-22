@@ -10,9 +10,10 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Card, CardContent } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
-import { getStatusColor, getStatusText, formatDate } from '@/lib/utils';
-import { Loader2, ArrowLeft, Clock, CheckCircle, AlertCircle, File, FileText, Image } from 'lucide-react';
+import { getStatusColor, getStatusText, formatDate, getFileIconByName } from '@/lib/utils';
+import { Loader2, ArrowLeft, Clock, CheckCircle, AlertCircle, File, FileText, Image, Download, MessageCircle, Calendar } from 'lucide-react';
 
 export default function ApplicationDetails() {
   const { user } = useAuth();
@@ -20,6 +21,7 @@ export default function ApplicationDetails() {
   const [location, navigate] = useLocation();
   const [notes, setNotes] = useState('');
   const [selectedStatus, setSelectedStatus] = useState('');
+  const [activeTab, setActiveTab] = useState('personal');
   
   // Extract application ID from URL
   const applicationId = location.split('/').pop();
@@ -145,9 +147,13 @@ export default function ApplicationDetails() {
     );
   }
   
-  const personalInfo = application.form_data?.personalInfo || {};
-  const educationInfo = application.form_data?.educationInfo || {};
-  const programInfo = application.form_data?.programInfo || {};
+  const formData = application.form_data || {};
+  const personalInfo = formData.personalInfo || {};
+  const educationInfo = formData.educationInfo || {};
+  const programInfo = formData.programInfo || {};
+  const medicalInfo = formData.medicalInfo || {};
+  const interests = formData.interests || {};
+  const accommodation = formData.accommodation || {};
   const statusColors = getStatusColor(application.status);
   
   // Helper function to get status icon
@@ -167,19 +173,6 @@ export default function ApplicationDetails() {
     }
   };
   
-  // Helper function to get file icon
-  const getFileIcon = (fileName: string) => {
-    const extension = fileName.split('.').pop()?.toLowerCase();
-    
-    if (extension === 'pdf') {
-      return <FileText className="h-5 w-5 text-slate-400" />;
-    } else if (['jpg', 'jpeg', 'png'].includes(extension || '')) {
-      return <Image className="h-5 w-5 text-slate-400" />;
-    } else {
-      return <File className="h-5 w-5 text-slate-400" />;
-    }
-  };
-
   return (
     <div className="px-4 sm:px-6 md:px-8">
       <div className="flex flex-wrap items-center justify-between mb-6">
@@ -282,260 +275,500 @@ export default function ApplicationDetails() {
         <div className="px-4 py-5 sm:p-6">
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
             <div className="col-span-2">
-              <div className="space-y-6">
-                {/* Personal Information Section */}
-                <div>
-                  <h3 className="text-lg font-medium text-slate-800 border-b border-slate-200 pb-2">Personal Information</h3>
-                  <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
-                    <div>
-                      <dt className="text-sm font-medium text-slate-500">First Name</dt>
-                      <dd className="mt-1 text-sm text-slate-900">{personalInfo.firstName}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-sm font-medium text-slate-500">Last Name</dt>
-                      <dd className="mt-1 text-sm text-slate-900">{personalInfo.lastName}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-sm font-medium text-slate-500">Date of Birth</dt>
-                      <dd className="mt-1 text-sm text-slate-900">{personalInfo.dob}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-sm font-medium text-slate-500">Phone Number</dt>
-                      <dd className="mt-1 text-sm text-slate-900">{personalInfo.phone}</dd>
-                    </div>
-                    <div className="sm:col-span-2">
-                      <dt className="text-sm font-medium text-slate-500">Address</dt>
-                      <dd className="mt-1 text-sm text-slate-900">
-                        {personalInfo.address}, {personalInfo.city}, {personalInfo.zipCode}
-                      </dd>
-                    </div>
-                  </div>
-                </div>
+              <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
+                <TabsList className="mb-4 grid grid-cols-6 gap-2">
+                  <TabsTrigger value="personal">Personal</TabsTrigger>
+                  <TabsTrigger value="education">Education</TabsTrigger>
+                  <TabsTrigger value="program">Program</TabsTrigger>
+                  <TabsTrigger value="medical">Medical</TabsTrigger>
+                  <TabsTrigger value="interests">Interests</TabsTrigger>
+                  <TabsTrigger value="accommodation">Housing</TabsTrigger>
+                </TabsList>
                 
-                {/* Education Section */}
-                <div>
-                  <h3 className="text-lg font-medium text-slate-800 border-b border-slate-200 pb-2">Education</h3>
-                  <div className="mt-4">
-                    <h4 className="text-md font-medium text-slate-700">High School</h4>
-                    <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+                {/* Personal Information Tab */}
+                <TabsContent value="personal" className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-medium text-slate-800 border-b border-slate-200 pb-2">Personal Information</h3>
+                    <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
                       <div>
-                        <dt className="text-sm font-medium text-slate-500">School Name</dt>
-                        <dd className="mt-1 text-sm text-slate-900">{educationInfo.highSchool?.name}</dd>
+                        <dt className="text-sm font-medium text-slate-500">First Name</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{personalInfo.firstName || personalInfo.surname}</dd>
                       </div>
                       <div>
-                        <dt className="text-sm font-medium text-slate-500">Location</dt>
-                        <dd className="mt-1 text-sm text-slate-900">{educationInfo.highSchool?.city}, {educationInfo.highSchool?.state}</dd>
+                        <dt className="text-sm font-medium text-slate-500">Middle Name</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{personalInfo.middleName || 'N/A'}</dd>
                       </div>
                       <div>
-                        <dt className="text-sm font-medium text-slate-500">Date Range</dt>
-                        <dd className="mt-1 text-sm text-slate-900">{educationInfo.highSchool?.startDate} to {educationInfo.highSchool?.endDate}</dd>
+                        <dt className="text-sm font-medium text-slate-500">Last Name</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{personalInfo.lastName}</dd>
                       </div>
                       <div>
-                        <dt className="text-sm font-medium text-slate-500">GPA</dt>
-                        <dd className="mt-1 text-sm text-slate-900">{educationInfo.highSchool?.gpa}</dd>
+                        <dt className="text-sm font-medium text-slate-500">National ID</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{personalInfo.nationalIdNumber}</dd>
                       </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Date of Birth</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{personalInfo.dateOfBirth || personalInfo.dob}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Gender</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{personalInfo.gender}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Phone Number</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{personalInfo.phoneNumber || personalInfo.phone}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Email</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{personalInfo.email}</dd>
+                      </div>
+                      
+                      {/* Contact Address */}
+                      <div className="sm:col-span-2">
+                        <h4 className="text-md font-medium text-slate-700 mt-2">Contact Address</h4>
+                      </div>
+                      {personalInfo.address && (
+                        <div className="sm:col-span-2">
+                          <dt className="text-sm font-medium text-slate-500">Address</dt>
+                          <dd className="mt-1 text-sm text-slate-900">
+                            {personalInfo.address}, {personalInfo.city}, {personalInfo.zipCode}
+                          </dd>
+                        </div>
+                      )}
+                      {personalInfo.contactAddress && (
+                        <>
+                          <div>
+                            <dt className="text-sm font-medium text-slate-500">P.O. Box</dt>
+                            <dd className="mt-1 text-sm text-slate-900">{personalInfo.contactAddress.poBox}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-sm font-medium text-slate-500">Postal Code</dt>
+                            <dd className="mt-1 text-sm text-slate-900">{personalInfo.contactAddress.postalCode}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-sm font-medium text-slate-500">Town</dt>
+                            <dd className="mt-1 text-sm text-slate-900">{personalInfo.contactAddress.town}</dd>
+                          </div>
+                        </>
+                      )}
+                      
+                      {/* Parent/Guardian Information */}
+                      <div className="sm:col-span-2">
+                        <h4 className="text-md font-medium text-slate-700 mt-4">Parent/Guardian Information</h4>
+                      </div>
+                      {personalInfo.parent && (
+                        <>
+                          <div>
+                            <dt className="text-sm font-medium text-slate-500">Name</dt>
+                            <dd className="mt-1 text-sm text-slate-900">{personalInfo.parent.name}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-sm font-medium text-slate-500">Phone Number</dt>
+                            <dd className="mt-1 text-sm text-slate-900">{personalInfo.parent.phoneNumber}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-sm font-medium text-slate-500">Occupation</dt>
+                            <dd className="mt-1 text-sm text-slate-900">{personalInfo.parent.occupation}</dd>
+                          </div>
+                        </>
+                      )}
                     </div>
                   </div>
-                  
-                  {educationInfo.college?.attended && (
+                </TabsContent>
+                
+                {/* Education Tab */}
+                <TabsContent value="education" className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-medium text-slate-800 border-b border-slate-200 pb-2">Education</h3>
+                    
+                    {/* Secondary School Information */}
                     <div className="mt-4">
-                      <h4 className="text-md font-medium text-slate-700">College</h4>
+                      <h4 className="text-md font-medium text-slate-700">Secondary School</h4>
                       <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
                         <div>
                           <dt className="text-sm font-medium text-slate-500">School Name</dt>
-                          <dd className="mt-1 text-sm text-slate-900">{educationInfo.college?.name}</dd>
+                          <dd className="mt-1 text-sm text-slate-900">
+                            {educationInfo.secondarySchool?.name || educationInfo.highSchool?.name || 'N/A'}
+                          </dd>
                         </div>
                         <div>
                           <dt className="text-sm font-medium text-slate-500">Location</dt>
-                          <dd className="mt-1 text-sm text-slate-900">{educationInfo.college?.city}, {educationInfo.college?.state}</dd>
+                          <dd className="mt-1 text-sm text-slate-900">
+                            {educationInfo.secondarySchool?.location || 
+                             (educationInfo.highSchool?.city && `${educationInfo.highSchool?.city}, ${educationInfo.highSchool?.state}`) || 
+                             'N/A'}
+                          </dd>
                         </div>
                         <div>
-                          <dt className="text-sm font-medium text-slate-500">Date Range</dt>
-                          <dd className="mt-1 text-sm text-slate-900">{educationInfo.college?.startDate} to {educationInfo.college?.endDate}</dd>
+                          <dt className="text-sm font-medium text-slate-500">Start Date</dt>
+                          <dd className="mt-1 text-sm text-slate-900">
+                            {educationInfo.secondarySchool?.startDate || educationInfo.highSchool?.startDate || 'N/A'}
+                          </dd>
                         </div>
                         <div>
-                          <dt className="text-sm font-medium text-slate-500">GPA</dt>
-                          <dd className="mt-1 text-sm text-slate-900">{educationInfo.college?.gpa}</dd>
+                          <dt className="text-sm font-medium text-slate-500">End Date</dt>
+                          <dd className="mt-1 text-sm text-slate-900">
+                            {educationInfo.secondarySchool?.endDate || educationInfo.highSchool?.endDate || 'N/A'}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-sm font-medium text-slate-500">KCSE Grade</dt>
+                          <dd className="mt-1 text-sm text-slate-900">
+                            {educationInfo.secondarySchool?.grade || educationInfo.highSchool?.gpa || 'N/A'}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-sm font-medium text-slate-500">Index Number</dt>
+                          <dd className="mt-1 text-sm text-slate-900">
+                            {educationInfo.secondarySchool?.indexNumber || 'N/A'}
+                          </dd>
                         </div>
                       </div>
                     </div>
-                  )}
-                </div>
-                
-                {/* Program Information */}
-                <div>
-                  <h3 className="text-lg font-medium text-slate-800 border-b border-slate-200 pb-2">Program Information</h3>
-                  <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
-                    <div>
-                      <dt className="text-sm font-medium text-slate-500">Program Type</dt>
-                      <dd className="mt-1 text-sm text-slate-900 capitalize">{programInfo.type}</dd>
-                    </div>
-                    <div>
-                      <dt className="text-sm font-medium text-slate-500">Intended Major</dt>
-                      <dd className="mt-1 text-sm text-slate-900">
-                        {programInfo.major === 'computerScience' ? 'Computer Science' :
-                         programInfo.major === 'business' ? 'Business Administration' :
-                         programInfo.major === 'psychology' ? 'Psychology' :
-                         programInfo.major === 'biology' ? 'Biology' :
-                         programInfo.major === 'engineering' ? 'Engineering' :
-                         programInfo.major === 'arts' ? 'Liberal Arts' : programInfo.major}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-sm font-medium text-slate-500">Start Term</dt>
-                      <dd className="mt-1 text-sm text-slate-900">
-                        {programInfo.startTerm === 'fall2023' ? 'Fall 2023' :
-                         programInfo.startTerm === 'spring2024' ? 'Spring 2024' :
-                         programInfo.startTerm === 'fall2024' ? 'Fall 2024' : programInfo.startTerm}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-sm font-medium text-slate-500">Campus</dt>
-                      <dd className="mt-1 text-sm text-slate-900 capitalize">
-                        {programInfo.campus === 'main' ? 'Main Campus' :
-                         programInfo.campus === 'downtown' ? 'Downtown Campus' :
-                         programInfo.campus === 'online' ? 'Online' : programInfo.campus}
-                      </dd>
-                    </div>
-                  </div>
-                  
-                  <div className="mt-4">
-                    <dt className="text-sm font-medium text-slate-500">Why do you want to study at our institution?</dt>
-                    <dd className="mt-1 text-sm text-slate-900">{programInfo.question}</dd>
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Sidebar */}
-            <div>
-              {/* Documents Section */}
-              <Card className="bg-slate-50">
-                <CardContent className="p-4">
-                  <h3 className="text-md font-medium text-slate-800">Documents</h3>
-                  {isLoadingDocuments ? (
-                    <div className="flex justify-center py-4">
-                      <Loader2 className="h-5 w-5 animate-spin text-primary-500" />
-                    </div>
-                  ) : documents && documents.length > 0 ? (
-                    <ul className="mt-4 space-y-3">
-                      {documents.map((doc: any) => (
-                        <li key={doc.id} className="flex items-start">
-                          <div className="flex-shrink-0">
-                            {getFileIcon(doc.file_name)}
-                          </div>
-                          <div className="ml-3">
-                            <p className="text-sm font-medium text-slate-700">{doc.file_name}</p>
-                            <p className="mt-1 text-xs text-slate-500">Uploaded on {formatDate(doc.uploaded_at)}</p>
-                            <div className="mt-1">
-                              {doc.url ? (
-                                <a 
-                                  href={doc.url} 
-                                  target="_blank" 
-                                  rel="noopener noreferrer"
-                                  className="text-xs text-primary-600 hover:text-primary-500"
-                                >
-                                  Download
-                                </a>
-                              ) : (
-                                <span className="text-xs text-slate-500">No download link available</span>
-                              )}
+                    
+                    {/* Previous College/University */}
+                    {(educationInfo.college?.attended || educationInfo.previousInstitutions?.length > 0) && (
+                      <div className="mt-6">
+                        <h4 className="text-md font-medium text-slate-700">Previous Institutions</h4>
+                        
+                        {educationInfo.college?.attended && (
+                          <div className="mt-2 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+                            <div>
+                              <dt className="text-sm font-medium text-slate-500">Institution Name</dt>
+                              <dd className="mt-1 text-sm text-slate-900">{educationInfo.college?.name}</dd>
+                            </div>
+                            <div>
+                              <dt className="text-sm font-medium text-slate-500">Location</dt>
+                              <dd className="mt-1 text-sm text-slate-900">{educationInfo.college?.city}, {educationInfo.college?.state}</dd>
+                            </div>
+                            <div>
+                              <dt className="text-sm font-medium text-slate-500">Date Range</dt>
+                              <dd className="mt-1 text-sm text-slate-900">{educationInfo.college?.startDate} to {educationInfo.college?.endDate}</dd>
+                            </div>
+                            <div>
+                              <dt className="text-sm font-medium text-slate-500">GPA/Grade</dt>
+                              <dd className="mt-1 text-sm text-slate-900">{educationInfo.college?.gpa || 'N/A'}</dd>
                             </div>
                           </div>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : (
-                    <p className="mt-4 text-sm text-slate-500">No documents uploaded yet.</p>
-                  )}
-                </CardContent>
-              </Card>
-              
-              {/* Notes Section */}
-              <Card className="mt-6 bg-slate-50">
-                <CardContent className="p-4">
-                  <h3 className="text-md font-medium text-slate-800">Reviewer Notes</h3>
-                  <div className="mt-4">
-                    <Textarea
-                      placeholder="Add a note..."
-                      rows={3}
-                      value={notes}
-                      onChange={(e) => setNotes(e.target.value)}
-                    />
-                    <div className="mt-2 flex justify-end">
-                      <Button
-                        size="sm"
-                        onClick={handleSaveNote}
-                        disabled={saveNote.isPending || !notes.trim()}
-                      >
-                        {saveNote.isPending ? (
-                          <>
-                            <Loader2 className="mr-2 h-3 w-3 animate-spin" />
-                            Saving...
-                          </>
-                        ) : (
-                          "Save Note"
                         )}
-                      </Button>
-                    </div>
-                  </div>
-                  
-                  {/* History entries that include notes */}
-                  {isLoadingHistory ? (
-                    <div className="flex justify-center py-4">
-                      <Loader2 className="h-5 w-5 animate-spin text-primary-500" />
-                    </div>
-                  ) : history && history.length > 0 ? (
-                    <div className="mt-4 space-y-4">
-                      {history
-                        .filter((item: any) => item.notes)
-                        .map((item: any) => (
-                          <div key={item.id} className="border-t border-slate-200 pt-4">
-                            <p className="text-sm text-slate-700">{item.notes}</p>
-                            <div className="mt-1 flex items-center justify-between">
-                              <span className="text-xs text-slate-500">Admin - {formatDate(item.created_at)}</span>
+                        
+                        {educationInfo.previousInstitutions?.map((institution: any, index: number) => (
+                          <div key={index} className="mt-4 border-t border-slate-100 pt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+                            <div>
+                              <dt className="text-sm font-medium text-slate-500">Institution Name</dt>
+                              <dd className="mt-1 text-sm text-slate-900">{institution.name}</dd>
+                            </div>
+                            <div>
+                              <dt className="text-sm font-medium text-slate-500">Location</dt>
+                              <dd className="mt-1 text-sm text-slate-900">{institution.location}</dd>
+                            </div>
+                            <div>
+                              <dt className="text-sm font-medium text-slate-500">Date Range</dt>
+                              <dd className="mt-1 text-sm text-slate-900">{institution.startDate} to {institution.endDate}</dd>
+                            </div>
+                            <div>
+                              <dt className="text-sm font-medium text-slate-500">Qualification Obtained</dt>
+                              <dd className="mt-1 text-sm text-slate-900">{institution.qualification || 'N/A'}</dd>
                             </div>
                           </div>
                         ))}
+                      </div>
+                    )}
+                  </div>
+                </TabsContent>
+                
+                {/* Program Tab */}
+                <TabsContent value="program" className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-medium text-slate-800 border-b border-slate-200 pb-2">Program Information</h3>
+                    <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Admission Type</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{programInfo.admissionType || 'Regular'}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Academic Level</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{programInfo.academicLevel || 'Undergraduate'}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">First Choice Program</dt>
+                        <dd className="mt-1 text-sm text-slate-900 font-medium">{programInfo.firstChoice}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Second Choice Program</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{programInfo.secondChoice || 'None'}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Third Choice Program</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{programInfo.thirdChoice || 'None'}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Preferred Campus</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{programInfo.campus || 'Main Campus'}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Mode of Study</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{programInfo.modeOfStudy || 'N/A'}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Entry Term</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{programInfo.entryTerm || 'N/A'}</dd>
+                      </div>
                     </div>
-                  ) : null}
-                </CardContent>
-              </Card>
-              
-              {/* Review Timeline */}
-              <Card className="mt-6 bg-slate-50">
+                  </div>
+                </TabsContent>
+                
+                {/* Medical Tab */}
+                <TabsContent value="medical" className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-medium text-slate-800 border-b border-slate-200 pb-2">Medical Information</h3>
+                    <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4 sm:grid-cols-2">
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Blood Group</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{medicalInfo.bloodGroup || 'Not specified'}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Has Chronic Illness</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{medicalInfo.hasChronicIllness ? 'Yes' : 'No'}</dd>
+                      </div>
+                      
+                      {medicalInfo.hasChronicIllness && (
+                        <div className="sm:col-span-2">
+                          <dt className="text-sm font-medium text-slate-500">Chronic Illness Details</dt>
+                          <dd className="mt-1 text-sm text-slate-900">{medicalInfo.chronicIllnessDetails || 'No details provided'}</dd>
+                        </div>
+                      )}
+                      
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Needs Special Diet</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{medicalInfo.needsSpecialDiet ? 'Yes' : 'No'}</dd>
+                      </div>
+                      
+                      {medicalInfo.needsSpecialDiet && (
+                        <div className="sm:col-span-2">
+                          <dt className="text-sm font-medium text-slate-500">Special Diet Details</dt>
+                          <dd className="mt-1 text-sm text-slate-900">{medicalInfo.specialDietDetails || 'No details provided'}</dd>
+                        </div>
+                      )}
+                      
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Has Medical Insurance</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{medicalInfo.hasMedicalInsurance ? 'Yes' : 'No'}</dd>
+                      </div>
+                      
+                      {medicalInfo.hasMedicalInsurance && (
+                        <>
+                          <div>
+                            <dt className="text-sm font-medium text-slate-500">Insurance Provider</dt>
+                            <dd className="mt-1 text-sm text-slate-900">{medicalInfo.insuranceProvider}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-sm font-medium text-slate-500">Policy Number</dt>
+                            <dd className="mt-1 text-sm text-slate-900">{medicalInfo.insurancePolicyNumber}</dd>
+                          </div>
+                        </>
+                      )}
+                      
+                      <div className="sm:col-span-2">
+                        <dt className="text-sm font-medium text-slate-500">Allergies</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{medicalInfo.allergies || 'None'}</dd>
+                      </div>
+                      
+                      {/* Emergency Contact */}
+                      <div className="sm:col-span-2">
+                        <h4 className="text-md font-medium text-slate-700 mt-4">Emergency Contact</h4>
+                      </div>
+                      
+                      {medicalInfo.emergencyContact && (
+                        <>
+                          <div>
+                            <dt className="text-sm font-medium text-slate-500">Name</dt>
+                            <dd className="mt-1 text-sm text-slate-900">{medicalInfo.emergencyContact.name}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-sm font-medium text-slate-500">Relationship</dt>
+                            <dd className="mt-1 text-sm text-slate-900">{medicalInfo.emergencyContact.relationship}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-sm font-medium text-slate-500">Phone Number</dt>
+                            <dd className="mt-1 text-sm text-slate-900">{medicalInfo.emergencyContact.phone}</dd>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                {/* Interests Tab */}
+                <TabsContent value="interests" className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-medium text-slate-800 border-b border-slate-200 pb-2">Interests and Activities</h3>
+                    <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4">
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Sports Interests</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{interests.sports || 'None specified'}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Clubs & Societies Interests</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{interests.clubs || 'None specified'}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Hobbies & Talents</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{interests.hobbies || 'None specified'}</dd>
+                      </div>
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Career Goals</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{interests.careerGoals || 'None specified'}</dd>
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+                
+                {/* Accommodation Tab */}
+                <TabsContent value="accommodation" className="space-y-6">
+                  <div>
+                    <h3 className="text-lg font-medium text-slate-800 border-b border-slate-200 pb-2">Accommodation Preferences</h3>
+                    <div className="mt-4 grid grid-cols-1 gap-x-6 gap-y-4">
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Needs University Accommodation</dt>
+                        <dd className="mt-1 text-sm text-slate-900">{accommodation.needsAccommodation ? 'Yes' : 'No'}</dd>
+                      </div>
+                      
+                      {accommodation.needsAccommodation && (
+                        <>
+                          <div>
+                            <dt className="text-sm font-medium text-slate-500">Room Preference</dt>
+                            <dd className="mt-1 text-sm text-slate-900">{accommodation.roomPreference || 'Not specified'}</dd>
+                          </div>
+                          <div>
+                            <dt className="text-sm font-medium text-slate-500">Special Accommodation Requests</dt>
+                            <dd className="mt-1 text-sm text-slate-900">{accommodation.specialRequest || 'None'}</dd>
+                          </div>
+                        </>
+                      )}
+                      
+                      <div>
+                        <dt className="text-sm font-medium text-slate-500">Alternative Address</dt>
+                        <dd className="mt-1 text-sm text-slate-900">
+                          {accommodation.alternativeAddress || 'Not provided'}
+                        </dd>
+                      </div>
+                    </div>
+                  </div>
+                </TabsContent>
+              </Tabs>
+            </div>
+            
+            <div>
+              {/* Documents Section */}
+              <Card className="mb-6">
                 <CardContent className="p-4">
-                  <h3 className="text-md font-medium text-slate-800">Review Timeline</h3>
-                  {isLoadingHistory ? (
-                    <div className="flex justify-center py-4">
-                      <Loader2 className="h-5 w-5 animate-spin text-primary-500" />
+                  <h3 className="text-lg font-medium text-slate-800 mb-4">Documents</h3>
+                  
+                  {isLoadingDocuments ? (
+                    <div className="flex items-center justify-center py-6">
+                      <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
                     </div>
-                  ) : history && history.length > 0 ? (
-                    <div className="mt-4 space-y-6">
-                      {history.map((item: any, index: number) => (
-                        <div key={item.id} className="relative flex gap-x-4">
-                          {index < history.length - 1 && (
-                            <div className="absolute left-0 top-0 flex w-6 justify-center -bottom-6">
-                              <div className="w-px bg-slate-300"></div>
-                            </div>
-                          )}
-                          <div className="relative flex h-6 w-6 flex-none items-center justify-center bg-white">
-                            <div className={`h-1.5 w-1.5 rounded-full ${
-                              index === 0 ? 'bg-slate-100 ring-1 ring-slate-300' : 'bg-green-100 ring-1 ring-green-300'
-                            }`}></div>
+                  ) : documents?.length === 0 ? (
+                    <div className="text-center py-6 text-slate-500 text-sm">
+                      No documents uploaded
+                    </div>
+                  ) : (
+                    <div className="space-y-4">
+                      {documents?.map((doc: any) => (
+                        <div key={doc.id} className="p-3 border border-slate-200 rounded-md flex items-start">
+                          <div className="flex-shrink-0 mr-3">
+                            {getFileIconByName(doc.file_name)}
                           </div>
-                          <div className="flex-auto py-0.5 text-xs text-slate-500">
-                            <span className="font-medium text-slate-900">{getStatusText(item.status)}</span>
-                            {item.notes ? ` - ${item.notes}` : null}
+                          <div className="flex-grow min-w-0">
+                            <p className="text-sm font-medium text-slate-700 truncate">{doc.file_name}</p>
+                            <p className="text-xs text-slate-500">
+                              {doc.document_type} • Uploaded {formatDate(doc.created_at)}
+                            </p>
                           </div>
-                          <time className="flex-none py-0.5 text-xs text-slate-500">
-                            {index === 0 ? 'Now' : formatDate(item.created_at)}
-                          </time>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="flex-shrink-0 ml-2" 
+                            onClick={() => window.open(`/api/documents/${doc.id}`, '_blank')}
+                          >
+                            <Download className="h-4 w-4" />
+                          </Button>
                         </div>
                       ))}
                     </div>
+                  )}
+                </CardContent>
+              </Card>
+              
+              {/* Review Notes Section */}
+              <Card className="mb-6">
+                <CardContent className="p-4">
+                  <h3 className="text-lg font-medium text-slate-800 mb-4">Add Review Note</h3>
+                  <Textarea
+                    placeholder="Add notes about this application..."
+                    className="mb-4"
+                    value={notes}
+                    onChange={(e) => setNotes(e.target.value)}
+                  />
+                  <Button 
+                    onClick={handleSaveNote} 
+                    className="w-full"
+                    disabled={!notes.trim() || saveNote.isPending}
+                  >
+                    {saveNote.isPending ? 'Saving...' : 'Save Note'}
+                  </Button>
+                </CardContent>
+              </Card>
+              
+              {/* Application History */}
+              <Card>
+                <CardContent className="p-4">
+                  <h3 className="text-lg font-medium text-slate-800 mb-4">Application History</h3>
+                  
+                  {isLoadingHistory ? (
+                    <div className="flex items-center justify-center py-6">
+                      <Loader2 className="h-5 w-5 animate-spin text-slate-400" />
+                    </div>
+                  ) : history?.length === 0 ? (
+                    <div className="text-center py-6 text-slate-500 text-sm">
+                      No history available
+                    </div>
                   ) : (
-                    <p className="mt-4 text-sm text-slate-500">No timeline available.</p>
+                    <div className="space-y-4">
+                      {history?.map((item: any) => {
+                        const statusColors = getStatusColor(item.status);
+                        return (
+                          <div key={item.id} className="border-l-2 border-slate-200 pl-4 py-2">
+                            <div className="flex items-start">
+                              <div className="mr-2 mt-0.5">
+                                {item.status ? (
+                                  getStatusIcon(item.status)
+                                ) : (
+                                  <MessageCircle className="h-5 w-5 text-slate-400" />
+                                )}
+                              </div>
+                              <div className="flex-grow">
+                                {item.status ? (
+                                  <p className="text-sm font-medium text-slate-800">
+                                    Status changed to <span className={statusColors.text}>{getStatusText(item.status)}</span>
+                                  </p>
+                                ) : (
+                                  <p className="text-sm font-medium text-slate-800">Review note added</p>
+                                )}
+                                {item.notes && (
+                                  <p className="text-sm text-slate-600 mt-1">{item.notes}</p>
+                                )}
+                                <p className="text-xs text-slate-500 mt-1 flex items-center">
+                                  <Calendar className="h-3 w-3 mr-1" />
+                                  {formatDate(item.created_at)}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
                   )}
                 </CardContent>
               </Card>
