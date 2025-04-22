@@ -229,7 +229,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Application routes
   app.get('/api/applications', authenticateUser, async (req, res) => {
     try {
-      const { id, role } = (req.session as any).user;
+      const { id, role } = req.session.user!;
       
       let applications;
       if (role === 'admin') {
@@ -246,7 +246,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/applications/:id', authenticateUser, async (req, res) => {
     try {
-      const { id: userId, role } = (req.session as any).user;
+      const { id: userId, role } = req.session.user!;
       const applicationId = parseInt(req.params.id);
       
       const application = await storage.getApplication(applicationId);
@@ -268,7 +268,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/applications', authenticateUser, async (req, res) => {
     try {
-      const { id: userId } = (req.session as any).user;
+      const { id: userId } = req.session.user!;
       
       const applicationData = insertApplicationSchema.parse({
         ...req.body,
@@ -300,7 +300,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/applications/:id', authenticateUser, async (req, res) => {
     try {
-      const { id: userId, role } = (req.session as any).user;
+      const { id: userId, role } = req.session.user!;
       const applicationId = parseInt(req.params.id);
       
       const application = await storage.getApplication(applicationId);
@@ -331,7 +331,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.put('/api/applications/:id/status', authenticateUser, async (req, res) => {
     try {
-      const { id: userId, role } = (req.session as any).user;
+      const { id: userId, role } = req.session.user!;
       const applicationId = parseInt(req.params.id);
       const { status, notes } = req.body;
       
@@ -364,7 +364,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Document upload routes
   app.post('/api/applications/:id/documents', authenticateUser, upload.single('file'), async (req, res) => {
     try {
-      const { id: userId, role } = (req.session as any).user;
+      const { id: userId, role } = req.session.user!;
       const applicationId = parseInt(req.params.id);
       
       const application = await storage.getApplication(applicationId);
@@ -415,7 +415,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/applications/:id/documents', authenticateUser, async (req, res) => {
     try {
-      const { id: userId, role } = (req.session as any).user;
+      const { id: userId, role } = req.session.user!;
       const applicationId = parseInt(req.params.id);
       
       const application = await storage.getApplication(applicationId);
@@ -452,7 +452,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Application history routes
   app.get('/api/applications/:id/history', authenticateUser, async (req, res) => {
     try {
-      const { id: userId, role } = (req.session as any).user;
+      const { id: userId, role } = req.session.user!;
       const applicationId = parseInt(req.params.id);
       
       const application = await storage.getApplication(applicationId);
