@@ -1110,266 +1110,206 @@ const PersonalInformationStep = () => {
 
 // Component for Step 2: Education History
 const EducationHistoryStep = () => {
-  const { control, watch, setValue, formState: { errors } } = useFormContext<ApplicationFormValues>();
-  const hasPreviousCollege = watch('educationInfo.college.attended');
+  const { control, formState: { errors } } = useFormContext<ApplicationFormValues>();
 
   return (
-    <div className="space-y-6">
-      <h3 className="text-lg font-medium text-slate-800 mb-6">Education History</h3>
+    <div className="space-y-8">
+      <h3 className="text-xl font-medium text-primary-700 mb-4">Education History</h3>
       
-      <div className="space-y-6">
-        <Card>
-          <CardContent className="p-4">
-            <h4 className="text-md font-medium text-slate-700 mb-4">High School Information</h4>
+      <div className="space-y-8">
+        {/* Secondary School Information */}
+        <Card className="shadow-sm">
+          <CardContent className="p-6">
+            <h4 className="text-lg font-medium text-slate-800 mb-4">Secondary School Information</h4>
             
             <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
               <div className="sm:col-span-2">
-                <Label htmlFor="educationInfo.highSchool.name">High School Name</Label>
+                <Label htmlFor="educationInfo.secondarySchool.name">School Name</Label>
                 <Controller
-                  name="educationInfo.highSchool.name"
+                  name="educationInfo.secondarySchool.name"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="educationInfo.highSchool.name"
+                      id="educationInfo.secondarySchool.name"
                       {...field}
                       className="mt-1"
-                      error={errors.educationInfo?.highSchool?.name?.message}
                     />
                   )}
                 />
-                {errors.educationInfo?.highSchool?.name && (
-                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.highSchool.name.message}</p>
+                {errors.educationInfo?.secondarySchool?.name && (
+                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.secondarySchool.name.message as string}</p>
                 )}
               </div>
               
               <div>
-                <Label htmlFor="educationInfo.highSchool.city">City</Label>
+                <Label htmlFor="educationInfo.secondarySchool.indexNumber">Index Number</Label>
                 <Controller
-                  name="educationInfo.highSchool.city"
+                  name="educationInfo.secondarySchool.indexNumber"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="educationInfo.highSchool.city"
+                      id="educationInfo.secondarySchool.indexNumber"
                       {...field}
                       className="mt-1"
-                      error={errors.educationInfo?.highSchool?.city?.message}
                     />
                   )}
                 />
-                {errors.educationInfo?.highSchool?.city && (
-                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.highSchool.city.message}</p>
+                {errors.educationInfo?.secondarySchool?.indexNumber && (
+                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.secondarySchool.indexNumber.message as string}</p>
                 )}
               </div>
               
               <div>
-                <Label htmlFor="educationInfo.highSchool.state">State/Province</Label>
+                <Label htmlFor="educationInfo.secondarySchool.yearCompleted">Year Completed</Label>
                 <Controller
-                  name="educationInfo.highSchool.state"
+                  name="educationInfo.secondarySchool.yearCompleted"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="educationInfo.highSchool.state"
+                      id="educationInfo.secondarySchool.yearCompleted"
                       {...field}
+                      type="number"
+                      min="1990"
+                      max={new Date().getFullYear()}
                       className="mt-1"
-                      error={errors.educationInfo?.highSchool?.state?.message}
                     />
                   )}
                 />
-                {errors.educationInfo?.highSchool?.state && (
-                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.highSchool.state.message}</p>
+                {errors.educationInfo?.secondarySchool?.yearCompleted && (
+                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.secondarySchool.yearCompleted.message as string}</p>
                 )}
               </div>
               
               <div>
-                <Label htmlFor="educationInfo.highSchool.startDate">Start Date</Label>
+                <Label htmlFor="educationInfo.secondarySchool.results">KCSE Results</Label>
                 <Controller
-                  name="educationInfo.highSchool.startDate"
+                  name="educationInfo.secondarySchool.results"
                   control={control}
                   render={({ field }) => (
                     <Input
-                      id="educationInfo.highSchool.startDate"
+                      id="educationInfo.secondarySchool.results"
                       {...field}
-                      type="month"
                       className="mt-1"
-                      error={errors.educationInfo?.highSchool?.startDate?.message}
+                      placeholder="e.g. B+"
                     />
                   )}
                 />
-                {errors.educationInfo?.highSchool?.startDate && (
-                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.highSchool.startDate.message}</p>
-                )}
-              </div>
-              
-              <div>
-                <Label htmlFor="educationInfo.highSchool.endDate">End Date</Label>
-                <Controller
-                  name="educationInfo.highSchool.endDate"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="educationInfo.highSchool.endDate"
-                      {...field}
-                      type="month"
-                      className="mt-1"
-                      error={errors.educationInfo?.highSchool?.endDate?.message}
-                    />
-                  )}
-                />
-                {errors.educationInfo?.highSchool?.endDate && (
-                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.highSchool.endDate.message}</p>
-                )}
-              </div>
-              
-              <div>
-                <Label htmlFor="educationInfo.highSchool.gpa">GPA</Label>
-                <Controller
-                  name="educationInfo.highSchool.gpa"
-                  control={control}
-                  render={({ field }) => (
-                    <Input
-                      id="educationInfo.highSchool.gpa"
-                      {...field}
-                      className="mt-1"
-                      error={errors.educationInfo?.highSchool?.gpa?.message}
-                    />
-                  )}
-                />
-                {errors.educationInfo?.highSchool?.gpa && (
-                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.highSchool.gpa.message}</p>
+                {errors.educationInfo?.secondarySchool?.results && (
+                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.secondarySchool.results.message as string}</p>
                 )}
               </div>
             </div>
           </CardContent>
         </Card>
         
-        <div>
-          <h4 className="text-md font-medium text-slate-700 mb-4">Previous College (if applicable)</h4>
-          <div className="flex items-center space-x-2">
-            <Controller
-              name="educationInfo.college.attended"
-              control={control}
-              render={({ field }) => (
-                <Checkbox
-                  id="hasPreviousCollege"
-                  checked={field.value}
-                  onCheckedChange={(checked) => {
-                    field.onChange(checked);
-                    if (!checked) {
-                      // Reset college fields if unchecked
-                      setValue('educationInfo.college.name', '');
-                      setValue('educationInfo.college.city', '');
-                      setValue('educationInfo.college.state', '');
-                      setValue('educationInfo.college.startDate', '');
-                      setValue('educationInfo.college.endDate', '');
-                      setValue('educationInfo.college.gpa', '');
-                    }
-                  }}
+        {/* Primary School Information */}
+        <Card className="shadow-sm">
+          <CardContent className="p-6">
+            <h4 className="text-lg font-medium text-slate-800 mb-4">Primary School Information</h4>
+            
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <Label htmlFor="educationInfo.primarySchool.name">School Name</Label>
+                <Controller
+                  name="educationInfo.primarySchool.name"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="educationInfo.primarySchool.name"
+                      {...field}
+                      className="mt-1"
+                    />
+                  )}
                 />
-              )}
-            />
-            <Label htmlFor="hasPreviousCollege">I have previously attended college</Label>
-          </div>
-          
-          {hasPreviousCollege && (
-            <Card className="mt-6">
-              <CardContent className="p-4">
-                <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                  <div className="sm:col-span-2">
-                    <Label htmlFor="educationInfo.college.name">College Name</Label>
-                    <Controller
-                      name="educationInfo.college.name"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="educationInfo.college.name"
-                          {...field}
-                          className="mt-1"
-                        />
-                      )}
+                {errors.educationInfo?.primarySchool?.name && (
+                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.primarySchool.name.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="educationInfo.primarySchool.indexNumber">Index Number</Label>
+                <Controller
+                  name="educationInfo.primarySchool.indexNumber"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="educationInfo.primarySchool.indexNumber"
+                      {...field}
+                      className="mt-1"
                     />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="educationInfo.college.city">City</Label>
-                    <Controller
-                      name="educationInfo.college.city"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="educationInfo.college.city"
-                          {...field}
-                          className="mt-1"
-                        />
-                      )}
+                  )}
+                />
+                {errors.educationInfo?.primarySchool?.indexNumber && (
+                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.primarySchool.indexNumber.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="educationInfo.primarySchool.yearCompleted">Year Completed</Label>
+                <Controller
+                  name="educationInfo.primarySchool.yearCompleted"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="educationInfo.primarySchool.yearCompleted"
+                      {...field}
+                      type="number"
+                      min="1990"
+                      max={new Date().getFullYear()}
+                      className="mt-1"
                     />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="educationInfo.college.state">State/Province</Label>
-                    <Controller
-                      name="educationInfo.college.state"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="educationInfo.college.state"
-                          {...field}
-                          className="mt-1"
-                        />
-                      )}
+                  )}
+                />
+                {errors.educationInfo?.primarySchool?.yearCompleted && (
+                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.primarySchool.yearCompleted.message as string}</p>
+                )}
+              </div>
+              
+              <div>
+                <Label htmlFor="educationInfo.primarySchool.results">KCPE Results</Label>
+                <Controller
+                  name="educationInfo.primarySchool.results"
+                  control={control}
+                  render={({ field }) => (
+                    <Input
+                      id="educationInfo.primarySchool.results"
+                      {...field}
+                      className="mt-1"
+                      placeholder="e.g. 350/500"
                     />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="educationInfo.college.startDate">Start Date</Label>
-                    <Controller
-                      name="educationInfo.college.startDate"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="educationInfo.college.startDate"
-                          {...field}
-                          type="month"
-                          className="mt-1"
-                        />
-                      )}
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="educationInfo.college.endDate">End Date</Label>
-                    <Controller
-                      name="educationInfo.college.endDate"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="educationInfo.college.endDate"
-                          {...field}
-                          type="month"
-                          className="mt-1"
-                        />
-                      )}
-                    />
-                  </div>
-                  
-                  <div>
-                    <Label htmlFor="educationInfo.college.gpa">GPA</Label>
-                    <Controller
-                      name="educationInfo.college.gpa"
-                      control={control}
-                      render={({ field }) => (
-                        <Input
-                          id="educationInfo.college.gpa"
-                          {...field}
-                          className="mt-1"
-                        />
-                      )}
-                    />
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          )}
-        </div>
+                  )}
+                />
+                {errors.educationInfo?.primarySchool?.results && (
+                  <p className="mt-1 text-sm text-red-600">{errors.educationInfo.primarySchool.results.message as string}</p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        {/* Other Institutions */}
+        <Card className="shadow-sm">
+          <CardContent className="p-6">
+            <h4 className="text-lg font-medium text-slate-800 mb-4">Other Institutions (Optional)</h4>
+            
+            <div>
+              <Label htmlFor="educationInfo.otherInstitutions">List any other educational institutions you have attended</Label>
+              <Controller
+                name="educationInfo.otherInstitutions"
+                control={control}
+                render={({ field }) => (
+                  <Textarea
+                    id="educationInfo.otherInstitutions"
+                    {...field}
+                    className="mt-1"
+                    rows={4}
+                    placeholder="Please provide the name, year, and program for each institution."
+                  />
+                )}
+              />
+            </div>
+          </CardContent>
+        </Card>
       </div>
     </div>
   );
@@ -1380,142 +1320,220 @@ const CourseSelectionStep = () => {
   const { control, formState: { errors } } = useFormContext<ApplicationFormValues>();
 
   return (
-    <div className="space-y-6">
-      <h3 className="text-lg font-medium text-slate-800 mb-6">Course Selection</h3>
+    <div className="space-y-8">
+      <h3 className="text-xl font-medium text-primary-700 mb-4">Program Information</h3>
       
-      <div className="space-y-6">
-        <div>
-          <Label htmlFor="programInfo.type">Program Type</Label>
-          <Controller
-            name="programInfo.type"
-            control={control}
-            render={({ field }) => (
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-              >
-                <SelectTrigger className="mt-1 w-full">
-                  <SelectValue placeholder="Select program type" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="undergraduate">Undergraduate</SelectItem>
-                  <SelectItem value="graduate">Graduate</SelectItem>
-                  <SelectItem value="certificate">Certificate</SelectItem>
-                </SelectContent>
-              </Select>
-            )}
-          />
-          {errors.programInfo?.type && (
-            <p className="mt-1 text-sm text-red-600">{errors.programInfo.type.message}</p>
-          )}
-        </div>
-        
-        <div>
-          <Label htmlFor="programInfo.major">Intended Major</Label>
-          <Controller
-            name="programInfo.major"
-            control={control}
-            render={({ field }) => (
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-              >
-                <SelectTrigger className="mt-1 w-full">
-                  <SelectValue placeholder="Select intended major" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="computerScience">Computer Science</SelectItem>
-                  <SelectItem value="business">Business Administration</SelectItem>
-                  <SelectItem value="psychology">Psychology</SelectItem>
-                  <SelectItem value="biology">Biology</SelectItem>
-                  <SelectItem value="engineering">Engineering</SelectItem>
-                  <SelectItem value="arts">Liberal Arts</SelectItem>
-                </SelectContent>
-              </Select>
-            )}
-          />
-          {errors.programInfo?.major && (
-            <p className="mt-1 text-sm text-red-600">{errors.programInfo.major.message}</p>
-          )}
-        </div>
-        
-        <div>
-          <Label htmlFor="programInfo.startTerm">Start Term</Label>
-          <Controller
-            name="programInfo.startTerm"
-            control={control}
-            render={({ field }) => (
-              <Select
-                value={field.value}
-                onValueChange={field.onChange}
-              >
-                <SelectTrigger className="mt-1 w-full">
-                  <SelectValue placeholder="Select start term" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="fall2023">Fall 2023</SelectItem>
-                  <SelectItem value="spring2024">Spring 2024</SelectItem>
-                  <SelectItem value="fall2024">Fall 2024</SelectItem>
-                </SelectContent>
-              </Select>
-            )}
-          />
-          {errors.programInfo?.startTerm && (
-            <p className="mt-1 text-sm text-red-600">{errors.programInfo.startTerm.message}</p>
-          )}
-        </div>
-        
-        <div>
-          <Label>Campus Preference</Label>
-          <Controller
-            name="programInfo.campus"
-            control={control}
-            render={({ field }) => (
-              <RadioGroup
-                value={field.value}
-                onValueChange={field.onChange}
-                className="mt-2 space-y-2"
-              >
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="main" id="campusMain" />
-                  <Label htmlFor="campusMain">Main Campus</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="downtown" id="campusDowntown" />
-                  <Label htmlFor="campusDowntown">Downtown Campus</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <RadioGroupItem value="online" id="campusOnline" />
-                  <Label htmlFor="campusOnline">Online</Label>
-                </div>
-              </RadioGroup>
-            )}
-          />
-          {errors.programInfo?.campus && (
-            <p className="mt-1 text-sm text-red-600">{errors.programInfo.campus.message}</p>
-          )}
-        </div>
-        
-        <div>
-          <Label htmlFor="programInfo.question">Why do you want to study at our institution?</Label>
-          <Controller
-            name="programInfo.question"
-            control={control}
-            render={({ field }) => (
-              <Textarea
-                id="programInfo.question"
-                {...field}
-                rows={4}
-                className="mt-1"
-                error={errors.programInfo?.question?.message}
+      <Card className="shadow-sm">
+        <CardContent className="p-6">
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+            <div>
+              <Label htmlFor="programInfo.school">School</Label>
+              <Controller
+                name="programInfo.school"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger className="mt-1 w-full">
+                      <SelectValue placeholder="Select school" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Business">School of Business</SelectItem>
+                      <SelectItem value="Education">School of Education</SelectItem>
+                      <SelectItem value="Agriculture">School of Agriculture</SelectItem>
+                      <SelectItem value="PACS">School of Pure & Applied Sciences</SelectItem>
+                      <SelectItem value="Nursing">School of Nursing</SelectItem>
+                      <SelectItem value="Computing">School of Computing & IT</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
               />
-            )}
-          />
-          {errors.programInfo?.question && (
-            <p className="mt-1 text-sm text-red-600">{errors.programInfo.question.message}</p>
-          )}
-        </div>
-      </div>
+              {errors.programInfo?.school && (
+                <p className="mt-1 text-sm text-red-600">{errors.programInfo.school.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="programInfo.programme">Programme</Label>
+              <Controller
+                name="programInfo.programme"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="programInfo.programme"
+                    {...field}
+                    className="mt-1"
+                    placeholder="e.g. Bachelor of Science in Computer Science"
+                  />
+                )}
+              />
+              {errors.programInfo?.programme && (
+                <p className="mt-1 text-sm text-red-600">{errors.programInfo.programme.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="programInfo.academicYear">Academic Year</Label>
+              <Controller
+                name="programInfo.academicYear"
+                control={control}
+                render={({ field }) => (
+                  <Input
+                    id="programInfo.academicYear"
+                    {...field}
+                    className="mt-1"
+                    placeholder="e.g. 2023/2024"
+                  />
+                )}
+              />
+              {errors.programInfo?.academicYear && (
+                <p className="mt-1 text-sm text-red-600">{errors.programInfo.academicYear.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="programInfo.campus">Campus</Label>
+              <Controller
+                name="programInfo.campus"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger className="mt-1 w-full">
+                      <SelectValue placeholder="Select campus" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Main Campus">Main Campus</SelectItem>
+                      <SelectItem value="Nairobi Campus">Nairobi Campus</SelectItem>
+                      <SelectItem value="Nyeri Town Campus">Nyeri Town Campus</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.programInfo?.campus && (
+                <p className="mt-1 text-sm text-red-600">{errors.programInfo.campus.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="programInfo.yearOfStudy">Year of Study</Label>
+              <Controller
+                name="programInfo.yearOfStudy"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger className="mt-1 w-full">
+                      <SelectValue placeholder="Select year of study" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">Year 1</SelectItem>
+                      <SelectItem value="2">Year 2</SelectItem>
+                      <SelectItem value="3">Year 3</SelectItem>
+                      <SelectItem value="4">Year 4</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.programInfo?.yearOfStudy && (
+                <p className="mt-1 text-sm text-red-600">{errors.programInfo.yearOfStudy.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="programInfo.semester">Semester</Label>
+              <Controller
+                name="programInfo.semester"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger className="mt-1 w-full">
+                      <SelectValue placeholder="Select semester" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="1">Semester 1</SelectItem>
+                      <SelectItem value="2">Semester 2</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.programInfo?.semester && (
+                <p className="mt-1 text-sm text-red-600">{errors.programInfo.semester.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="programInfo.entryIntake">Entry Intake</Label>
+              <Controller
+                name="programInfo.entryIntake"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    value={field.value}
+                    onValueChange={field.onChange}
+                  >
+                    <SelectTrigger className="mt-1 w-full">
+                      <SelectValue placeholder="Select entry intake" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="May">May Intake</SelectItem>
+                      <SelectItem value="September">September Intake</SelectItem>
+                      <SelectItem value="January">January Intake</SelectItem>
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+              {errors.programInfo?.entryIntake && (
+                <p className="mt-1 text-sm text-red-600">{errors.programInfo.entryIntake.message as string}</p>
+              )}
+            </div>
+            
+            <div>
+              <Label htmlFor="programInfo.studyMode">Mode of Study</Label>
+              <Controller
+                name="programInfo.studyMode"
+                control={control}
+                render={({ field }) => (
+                  <RadioGroup 
+                    onValueChange={field.onChange} 
+                    defaultValue={field.value} 
+                    className="flex flex-col space-y-2 mt-2"
+                  >
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Full Time" id="mode-fulltime" />
+                      <Label htmlFor="mode-fulltime">Full Time</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Weekend" id="mode-weekend" />
+                      <Label htmlFor="mode-weekend">Weekend</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Evening" id="mode-evening" />
+                      <Label htmlFor="mode-evening">Evening</Label>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <RadioGroupItem value="Part time" id="mode-parttime" />
+                      <Label htmlFor="mode-parttime">Part time</Label>
+                    </div>
+                  </RadioGroup>
+                )}
+              />
+              {errors.programInfo?.studyMode && (
+                <p className="mt-1 text-sm text-red-600">{errors.programInfo.studyMode.message as string}</p>
+              )}
+            </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
