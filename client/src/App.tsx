@@ -12,6 +12,7 @@ import Register from "@/pages/register";
 import ForgotPassword from "@/pages/forgot-password";
 import ResetPassword from "@/pages/reset-password";
 import NotFound from "@/pages/not-found";
+import MakeAdmin from "@/pages/make-admin";
 
 // Student Pages
 import Dashboard from "@/pages/dashboard/index";
@@ -54,6 +55,7 @@ function Router() {
       <Route path="/register" component={Register} />
       <Route path="/forgot-password" component={ForgotPassword} />
       <Route path="/reset-password" component={ResetPassword} />
+      <Route path="/make-admin" component={MakeAdmin} />
       
       {/* Student Routes */}
       <Route path="/dashboard">

@@ -225,6 +225,63 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.status(500).json({ message: "Server error" });
     }
   });
+  
+  // Route to get all users
+  app.get('/api/users', authenticateUser, async (req, res) => {
+    try {
+      const { role } = req.session.user!;
+      
+      // Only admins can get all users
+      if (role !== 'admin') {
+        return res.status(403).json({ message: "Access forbidden" });
+      }
+      
+      const users = await storage.getAllUsers();
+      
+      // Map to remove passwords
+      const sanitizedUsers = users.map(user => ({
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        created_at: user.created_at,
+        // Calculate applications count (this is a placeholder - in a real implementation, you'd do a join)
+        applications_count: 0
+      }));
+      
+      res.status(200).json(sanitizedUsers);
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
+  
+  // Route to update a user's role
+  app.put('/api/users/:id/role', authenticateUser, async (req, res) => {
+    try {
+      const { role: currentUserRole } = req.session.user!;
+      const userId = parseInt(req.params.id);
+      const { role } = req.body;
+      
+      // Only admins can update roles
+      if (currentUserRole !== 'admin') {
+        return res.status(403).json({ message: "Access forbidden" });
+      }
+      
+      const user = await storage.getUser(userId);
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      const updatedUser = await storage.updateUserRole(userId, role);
+      
+      res.status(200).json({
+        id: updatedUser?.id,
+        email: updatedUser?.email,
+        role: updatedUser?.role,
+      });
+    } catch (error) {
+      res.status(500).json({ message: "Server error" });
+    }
+  });
 
   // Application routes
   app.get('/api/applications', authenticateUser, async (req, res) => {
